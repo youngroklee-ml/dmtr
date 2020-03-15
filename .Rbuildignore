@@ -1,0 +1,5 @@
+^renv$
+^renv\.lock$
+^dmtr\.Rproj$
+^\.Rproj\.user$
+^data-raw$

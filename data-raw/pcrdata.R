@@ -1,0 +1,15 @@
+## code to prepare `pcrdata` dataset goes here
+
+library(dplyr)
+
+pcrdata <- tribble(
+  ~x1, ~x2, ~x3, ~y,
+  -3, -3, 5, -30,
+  -2, -3, 7, -20,
+  0, 0, 4, 0,
+  1, 2, 0, 5,
+  2, 2, -5, 10,
+  2, 2, -11, 35
+)
+
+usethis::use_data(pcrdata, overwrite = TRUE)
