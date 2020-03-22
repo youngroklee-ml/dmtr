@@ -8,14 +8,14 @@
 #' @param ... 범주별 데이터 프레임에 포함될 변수. One or more variables separated by commas.
 #'   Each variable needs to be a numeric column of \code{.data}.
 #' @return 두 개의 컬럼을 지닌 데이터 프레임으로, 첫 번째 컬럼은 범주변수 \code{.group_var}이며, 두 번째 컬럼
-#'   \code{data}는 각 범주 내의 관측객체들에 대한 데이터 프레임으로, \code{...}에 속한 변수들을 컬럼으로 지닌다.
+#'   \code{new_col}는 각 범주 내의 관측객체들에 대한 데이터 프레임으로, \code{...}에 속한 변수들을 컬럼으로 지닌다.
 group_nest <- function(.data, .group_var, ...) {
   .group_var <- rlang::enquo(.group_var)
   .variables <- rlang::enquos(...)
 
   res <- .data %>%
     dplyr::select(!!.group_var, !!!.variables) %>%
-    tidyr::nest(data = c(!!!.variables))
+    tidyr::nest(new_col = c(!!!.variables))
 
   return(res)
 }
@@ -50,8 +50,8 @@ group_mean <- function(.data, .group_var, ...) {
   nested_df <- group_nest(.data, !!.group_var, ...)
 
   res <- nested_df %>%
-    dplyr::pull(data) %>%
-    purrr::map(~ purrr::map_dbl(.x, mean))
+    dplyr::pull(new_col) %>%
+    purrr::map(~ purrr::map_dbl(.x, base::mean))
 
   attr(res, "group") <- nested_df %>% dplyr::pull(!!.group_var)
 
@@ -88,8 +88,8 @@ group_variance <- function(.data, .group_var, ...) {
   nested_df <- group_nest(.data, !!.group_var, ...)
 
   res <- nested_df %>%
-    dplyr::pull(data) %>%
-    purrr::map(var)
+    dplyr::pull(new_col) %>%
+    purrr::map(stats::var)
 
   attr(res, "group") <- nested_df %>% dplyr::pull(!!.group_var)
 
@@ -119,12 +119,12 @@ group_summary <- function(.data, .group_var, ...) {
 
   nested_df <- group_nest(.data, !!.group_var, ...)
 
-  res <- purrr::pmap(
-    nested_df,
+  res <- purrr::map(
+    nested_df %>% dplyr::pull(new_col),
     ~ list(
-      n = nrow(..2),
-      mean = purrr::map_dbl(..2, mean),
-      sigma = var(..2)
+      n = base::nrow(.x),
+      mean = purrr::map_dbl(.x, base::mean),
+      sigma = stats::var(.x)
     )
   )
 
@@ -157,7 +157,7 @@ pooled_variance <- function(.data, .group_var, ...) {
   numerator <- purrr::map(summ, ~ (.[["n"]] - 1) * (.[["sigma"]])) %>%
     purrr::reduce(`+`)
 
-  denominator <- purrr::map_int(summ, ~ (.[["n"]] - 1L)) %>% sum()
+  denominator <- purrr::map_int(summ, ~ (.[["n"]] - 1L)) %>% base::sum()
 
   res <- numerator / denominator
 
