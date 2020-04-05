@@ -12,3 +12,15 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
+Imports: 
+    magrittr,
+    dplyr,
+    rlang,
+    tidyr,
+    purrr
+Suggests: 
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown
+Depends: R (>= 2.10.0)
+VignetteBuilder: knitr

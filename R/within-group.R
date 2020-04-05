@@ -50,7 +50,7 @@ group_mean <- function(.data, .group_var, ...) {
   nested_df <- group_nest(.data, !!.group_var, ...)
 
   res <- nested_df %>%
-    dplyr::pull(new_col) %>%
+    dplyr::pull(.data$new_col) %>%
     purrr::map(~ purrr::map_dbl(.x, base::mean))
 
   attr(res, "group") <- nested_df %>% dplyr::pull(!!.group_var)
@@ -88,7 +88,7 @@ group_variance <- function(.data, .group_var, ...) {
   nested_df <- group_nest(.data, !!.group_var, ...)
 
   res <- nested_df %>%
-    dplyr::pull(new_col) %>%
+    dplyr::pull(.data$new_col) %>%
     purrr::map(stats::var)
 
   attr(res, "group") <- nested_df %>% dplyr::pull(!!.group_var)
@@ -120,7 +120,7 @@ group_summary <- function(.data, .group_var, ...) {
   nested_df <- group_nest(.data, !!.group_var, ...)
 
   res <- purrr::map(
-    nested_df %>% dplyr::pull(new_col),
+    nested_df %>% dplyr::pull(.data$new_col),
     ~ list(
       n = base::nrow(.x),
       mean = purrr::map_dbl(.x, base::mean),
