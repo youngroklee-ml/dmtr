@@ -22,3 +22,5 @@ test_that("group_mean returns correct length of list", {
     length(levels(binaryclass2$class))
   )
 })
+
+
