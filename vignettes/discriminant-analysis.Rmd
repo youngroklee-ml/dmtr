@@ -30,7 +30,7 @@ library(stringr)
 # 데이터
 
 ```{r fisher-data-load}
-data("binaryclass2")
+data(binaryclass2, package = "dmtr")
 ```
 
 ```{r fisher-data-print, echo = FALSE}
@@ -214,7 +214,7 @@ u_k(\mathbf{x}) = \boldsymbol\mu_k^\top \boldsymbol\Sigma^{-1}\mathbf{x} - \frac
 (\#eq:lda-discriminant-function)
 \end{equation}
 
-로 정의한다. 위 피셔 판별함수를 함수 `ld_fun()`로 구현하였다.
+로 정의한다. 위 판별함수를 함수 `ld_fun()`로 구현하였다.
 
 ```{r}
 f <- ld_fun(binaryclass2, class, x1, x2)
@@ -226,12 +226,10 @@ f <- ld_fun(binaryclass2, class, x1, x2)
 u_df <- map_dfc(f, 
   ~ binaryclass2 %>% 
     select(x1, x2) %>%
-    rowwise() %>%
-    transmute(u = .x(c(x1, x2))) %>%
-    ungroup()
+    transmute(u = apply(., 1, .x))
 )
 
-names(u_df) <- str_c("u", attr(f, "group"), sep = "")
+names(u_df) <- str_c(".score", attr(f, "group"), sep = "_")
 score_df <- bind_cols(binaryclass2, u_df)
 ```
 
@@ -243,4 +241,187 @@ knitr::kable(
   caption = '학습표본에 대한 LDA 적용 결과: 판별함수값'
 )
 ```
+
+베이즈 정리(Bayes's theorem)에 따라 변수 $\mathbf{x}$값이 주어졌을 때 범주 $k$에 속할 사후확률(posterior)은 아래와 같이 구할 수 있다.
+
+\begin{equation}
+P(y = k \, | \, \mathbf{x}) = \frac{\pi_k f_k(\mathbf{x})}{f(\mathbf{x})}
+(\#eq:lda-posterior)
+\end{equation}
+
+```{r}
+p_df <- u_df %>%
+  mutate_all(exp) %>%
+  mutate_all(function(x) x / rowSums(.))
+
+names(p_df) <- str_c(".pred", attr(f, "group"), sep = "_")
+posterior_df <- bind_cols(binaryclass2, p_df)
+```
+
+```{r ld-posterior, echo = FALSE}
+knitr::kable(
+  posterior_df,
+  align = c('r', 'r', 'r', 'r', 'r', 'r'),
+  caption = '학습표본에 대한 LDA 적용 결과: 사후확률값'
+)
+```
+
+최종적으로, 각 범주에 대한 사후확률이 높은 쪽으로 범주를 추정한다.
+
+\begin{equation}
+\hat{y} = \begin{cases}
+    1, & \text{if } P(y = 1 \, | \, \mathbf{x}) \ge P(y = 2 \, | \, \mathbf{x})\\
+    2, & \text{otherwise}
+\end{cases}
+(\#eq:lda-posterior-rule)
+\end{equation}
+
+```{r}
+yhat_df <- tibble(
+  .pred_class = attr(f, "group")[apply(p_df, 1, which.max)]
+)
+
+prediction_df <- bind_cols(posterior_df, yhat_df)
+```
+
+```{r ld-prediction, echo = FALSE}
+knitr::kable(
+  prediction_df,
+  align = c('r', 'r', 'r', 'r', 'r', 'r', 'r'),
+  caption = '학습표본에 대한 LDA 적용 결과: 사후확률값 및 추정범주'
+)
+```
+
+
+위와 같이 새 데이터에 대해 판별함수값, 사후확률 및 범주추정을 수행하는 함수를 `predict_da()`로 구현하였다.
+
+```{r}
+predict_da(f, .new_data = binaryclass2, x1, x2, 
+  .include_score = TRUE,
+  .include_posterior = TRUE,
+  .include_class = TRUE)
+```
+
+
+
+# 이차 판별함수
+
+각 범주의 확률밀도함수는 아래와 같이 다변량 정규분포로 정의된다.
+
+\begin{equation}
+f_k(\mathbf{x}) = \frac{1}{(2\pi)^{p/2}|\boldsymbol\Sigma_k|^{1/2}} \exp \{ -\frac{1}{2} \left(\mathbf{x} - \boldsymbol\mu_k\right)^\top \boldsymbol\Sigma_k^{-1} \left(\mathbf{x} - \boldsymbol\mu_k\right) \}
+(\#eq:qda-mv-gaussian-dist)
+\end{equation}
+
+위 식 \@ref(eq:qda-mv-gaussian-dist)이 선형판별함수에서 사용한 식 \@ref(eq:mv-gaussian-dist)과 다른 부분은 분산-공분산분포 $\boldsymbol\Sigma_k$가 범주 $k$에 대해 각각 정의된다는 점이다.
+
+이 경우 각 범주에 대한 판별함수는 아래와 같이 정의된다.
+
+\begin{equation}
+u_k(\mathbf{x}) = - \frac{1}{2} (\mathbf{x} - \boldsymbol\mu_k)^\top \boldsymbol\Sigma_k^{-1} (\mathbf{x} - \boldsymbol\mu_k) - \frac{1}{2} \ln \left| \boldsymbol\Sigma_k \right| + \ln \pi_k
+(\#eq:qda-discriminant-function)
+\end{equation}
+
+위 판별함수를 데이터로부터 얻는 함수를 `qd_fun()`로 구현하였다.
+
+```{r}
+f <- qd_fun(binaryclass2, class, x1, x2)
+```
+
+이후, 선형판별함수에서와 같이 함수 `predict_df()`를 이용하여 판별함수값, 사후확률 및 범주추정값을 얻을 수 있다.
+
+```{r}
+prediction_df <- predict_da(f, .new_data = binaryclass2, x1, x2, 
+  .include_score = TRUE,
+  .include_posterior = TRUE,
+  .include_class = TRUE)
+
+prediction_df <- bind_cols(binaryclass2, prediction_df)
+```
+
+```{r qd-prediction, echo = FALSE}
+knitr::kable(
+  prediction_df,
+  align = c('r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'),
+  caption = '학습표본에 대한 QDA 적용 결과: 판별함수값, 사후확률 및 추정범주'
+)
+```
+
+
+# 세 범주 이상의 분류
+
+## 데이터
+
+3개의 범주를 지닌 붓꽃(iris) 데이터에 대해 판별분석을 수행하고자 한다.
+
+```{r}
+data(iris90, package = "dmtr")
+```
+
+
+## 선형 판별 분석
+
+함수 `ld_fun()`을 이용하여 선형 판별함수를 구하고, `predict_da()`를 이용하여 범주를 추정한다.
+
+```{r}
+f <- ld_fun(iris90, class, x1, x2, x3, x4)
+predict_df <- predict_da(f, .new_data = iris90, x1, x2, x3, x4, 
+  .include_posterior = TRUE)
+
+predict_df <- bind_cols(iris90, predict_df)
+```
+
+```{r ld-iris-prediction, echo = FALSE}
+knitr::kable(
+  prediction_df,
+  align = rep('r', ncol(prediction_df)),
+  caption = '붗꽃 표본에 대한 LDA 적용 결과: 판별함수값, 사후확률 및 추정범주'
+)
+```
+
+위 결과 오분류 데이터는 아래와 같다.
+
+```{r ld-iris-misclassification, echo = FALSE}
+knitr::kable(
+  predict_df %>% filter(class != .pred_class),
+  align = rep('r', ncol(prediction_df)),
+  caption = '붗꽃 표본에 대한 LDA 오분류 객체'
+)
+```
+
+
+## 이차 판별 분석
+
+함수 `qd_fun()`을 이용하여 이차 판별함수를 구하고, `predict_da()`를 이용하여 범주를 추정한다.
+
+```{r}
+f <- qd_fun(iris90, class, x1, x2, x3, x4)
+predict_df <- predict_da(f, .new_data = iris90, x1, x2, x3, x4, 
+  .include_posterior = TRUE)
+
+predict_df <- bind_cols(iris90, predict_df)
+```
+
+```{r qd-iris-prediction, echo = FALSE}
+knitr::kable(
+  prediction_df,
+  align = rep('r', ncol(prediction_df)),
+  caption = '붗꽃 표본에 대한 QDA 적용 결과: 판별함수값, 사후확률 및 추정범주'
+)
+```
+
+
+위 결과 오분류 데이터는 아래와 같다.
+
+```{r qd-iris-misclassification, echo = FALSE}
+knitr::kable(
+  predict_df %>% filter(class != .pred_class),
+  align = rep('r', ncol(prediction_df)),
+  caption = '붗꽃 표본에 대한 QDA 오분류 객체'
+)
+```
+
+
+위 결과에서 선형판별분석과 이차판별분석은 동일한 객체를 오분류한다. 해당 객체의 실제 범주에 대한 사후확률은 이차판별분석 결과에서 보다 높게 나타난다.
+
 
