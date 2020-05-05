@@ -1,0 +1,156 @@
+---
+title: "로지스틱 회귀분석"
+output: 
+  bookdown::html_document2:
+    base_format: rmarkdown::html_vignette
+bibliography: book.bib
+biblio-style: apalike
+link-citations: yes
+vignette: >
+  %\VignetteIndexEntry{06 로지스틱 회귀분석}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message = FALSE}
+library(dmtr)
+library(dplyr)
+```
+
+
+# 데이터
+
+```{r logistic-regression-data-load}
+data(student, package = "dmtr")
+```
+
+```{r logistic-regression-data-print, echo = FALSE}
+knitr::kable(
+  student,
+  align = c('r', 'r', 'r', 'r', 'r'),
+  caption = '우수/보통 학생에 대한 설문조사 결과'
+)
+```
+
+
+# 이분 로지스틱 회귀모형 {#binary-logistic-reg-model}
+
+이분 로지스틱 회귀모형은 종속변수가 2가지 범주를 취하는 경우에 사용된다.
+
+$N$개의 객체로 이루어진 학습데이터 $\{(\mathbf{x}_i, y_i)\}_{i = 1, \cdots, N}$를 아래와 같이 정의하자.
+
+- $\mathbf{x}_i \in \mathbb{R}^p$: $p$개의 독립변수로 이루어진 벡터 ($\mathbf{x}_i = [x_{i1} \, x_{i2} \, \cdots \, x_{ip}]^\top$)
+- $y_i$: 0 혹은 1의 값을 갖는 이분형 지시변수 (indicator variable)
+
+$\mathbf{x}_i$ 관측값을 이용하여 $y_i$의 기대값 $P_i$을 추정하는 모형을 아래와 같이 로지스틱 함수로 정의하자.
+
+\begin{eqnarray}
+P_i &=& P(y_i = 1 \,|\, \mathbf{x}_i)\\
+&=& E[y_i | \mathbf{x}_i]\\ 
+&=& \frac{\exp(\beta_0 + \boldsymbol\beta^\top \mathbf{x}_i)}{1 + \exp(\beta_0 + \boldsymbol\beta^\top \mathbf{x}_i)}
+(\#eq:logistic-function)
+\end{eqnarray}
+
+여기에서 $\boldsymbol\beta \in \mathbb{R}^{p}$는 $\mathbf{x}_i$와 동일한 차원의 벡터이다 ($\boldsymbol\beta = [\beta_1 \, \beta_2 \, \cdots \,  \beta_p]^\top$). 
+
+식 \@ref(eq:logistic-function)는 모든 $\mathbf{x}_i$값에 대해 0에서 1 사이의 값을 갖게 되므로 각 범주에 속할 확률을 추정하는 데 적합한 반면, 변수 $\mathbf{x}$ 및 계수들에 대해 선형이 아니므로 추정이 어렵다. 그러나 아래와 같이 로짓(logit) 변환을 통해 선형회귀식으로 변환할 수 있다.
+
+\begin{eqnarray}
+logit(P_i) &=& \ln \left[ \frac{P_i}{1 - P_i} \right]\\
+&=& \ln(\exp(\beta_0 + \boldsymbol\beta^\top \mathbf{x}_i))\\
+&=& \beta_0 + \boldsymbol\beta^\top \mathbf{x}_i
+(\#eq:logit-transform)
+\end{eqnarray}
+
+식 \@ref(eq:logit-transform)에서 확률 $P_i$는 직접적으로 관측되는 것이 아니고 0 또는 1을 갖는 $y_i$가 관측되므로, $P_i$를 일종의 잠재변수(latent variable)로 해석할 수 있다. 
+
+\begin{equation}
+y_i = \begin{cases}
+1 & \text{ if } \beta_0 + \boldsymbol\beta^\top \mathbf{x}_i + \varepsilon_i > 0 \\
+0 & \text{ otherwise }
+\end{cases}
+(\#eq:binary-logistic-latent-interpret)
+\end{equation}
+
+식 \@ref(eq:binary-logistic-latent-interpret)에서 $\varepsilon_i$는 표준로지스틱분포(standard logistic distribution)을 따른다.
+
+
+## 회귀계수 추정 {#binary-logistic-reg-estimation}
+
+로지스틱 모형에서 회귀계수의 추정을 위해서 주로 최우추정법(maximum likelihood estimation)이 사용된다. $N$개의 객체로 이루어진 학습데이터에 대해 우도함수는 다음과 같다.
+
+\begin{equation*}
+L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
+\end{equation*}
+
+그리고 우도함수에 자연로그를 취하면 아래와 같이 전개된다.
+
+\begin{eqnarray}
+\log L &=& \sum_{i = 1}^{N} y_i \log P_i + \sum_{i = 1}^{N} (1 - y_i) \log (1 - P_i)\\
+&=& \sum_{i = 1}^{N} y_i \log \frac{P_i}{1 - P_i} + \sum_{i = 1}^{N} \log (1 - P_i)\\
+&=& \sum_{i = 1}^{N} y_i (\beta_0 + \boldsymbol\beta^\top \mathbf{x}_i) - \sum_{i = 1}^{N}  \log (1 + \exp (\beta_0 + \boldsymbol\beta^\top \mathbf{x}_i) )\\
+&=& \sum_{i = 1}^{N} y_i \left(\beta_0 + \sum_{j = 1}^{p} \beta_j x_{ij} \right) - \sum_{i = 1}^{N}  \log \left(1 + \exp\left(\beta_0 + \sum_{j = 1}^{p} \beta_j x_{ij}\right)\right)
+(\#eq:binary-logistic-reg-loglik)
+\end{eqnarray}
+
+식 \@ref(eq:binary-logistic-reg-loglik)을 각 회귀계수 $\beta_0, \beta_1, \cdots, \beta_p$에 대해 편미분하여 최적해를 얻는다. 이를 위해 주로 뉴턴-랩슨 알고리즘(Newton-Raphson algorithm)이나 quasi-Newton 알고리즘이 사용된다 [@jun2012datamining].
+
+회귀계수를 추정하는 함수를 `fit_binary_logistic_regression()`으로 구현하였다.
+
+```{r}
+fit <- fit_binary_logistic_regression(student, y, x1, x2, x3, .reflevel = "우수")
+print(fit)
+```
+
+
+위 추정계수와 헤시안 행렬(Hessian matrix)를 이용하여 아래와 같이 결과를 요약할 수 있다.
+
+```{r}
+fit_summary_df <- tibble(
+  term = names(fit$betas),
+  estimate = fit$betas,
+  std_error = sqrt((diag(solve(-fit$hessian)))),
+  statistic = estimate / std_error,
+  p_value = pnorm(if_else(statistic < 0, statistic, - statistic)) * 2,
+  odds_ratio = if_else(term == "(Intercept)", NA_real_, exp(estimate))
+)
+```
+
+```{r binary-logistic-reg-coef, echo = FALSE}
+knitr::kable(
+  fit_summary_df,
+  booktabs = TRUE,
+  digits = 2L,
+  caption = "우수/보통 학생 설문조사 데이터에 대한 Logistic Regression 결과"
+)
+```
+
+
+위 추정된 계수를 이용하여 사후확률을 계산하는 함수 회귀계수를 추정하는 함수를 `posterior_binary_logistic_regression()`로 구현하였다.
+
+```{r}
+posterior_df <- posterior_binary_logistic_regression(
+  fit$betas, .new_data = student, x1, x2, x3, 
+  .reflevel = "우수"
+)
+
+prediction_df <- bind_cols(student, posterior_df)
+```
+
+```{r binary-logistic-reg-prediction, echo = FALSE}
+knitr::kable(
+  prediction_df,
+  booktabs = TRUE,
+  align = rep('r', ncol(prediction_df)),
+  digits = 2L,
+  caption = "우수/보통 학생 설문조사 데이터에 대한 범주 추정"
+)
+```
+

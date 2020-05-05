@@ -238,6 +238,7 @@ score_df <- bind_cols(binaryclass2, u_df)
 knitr::kable(
   score_df,
   align = c('r', 'r', 'r', 'r', 'r', 'r'),
+  digits = 2L,
   caption = '학습표본에 대한 LDA 적용 결과: 판별함수값'
 )
 ```
@@ -262,6 +263,7 @@ posterior_df <- bind_cols(binaryclass2, p_df)
 knitr::kable(
   posterior_df,
   align = c('r', 'r', 'r', 'r', 'r', 'r'),
+  digits = 2L,
   caption = '학습표본에 대한 LDA 적용 결과: 사후확률값'
 )
 ```
@@ -288,6 +290,7 @@ prediction_df <- bind_cols(posterior_df, yhat_df)
 knitr::kable(
   prediction_df,
   align = c('r', 'r', 'r', 'r', 'r', 'r', 'r'),
+  digits = 2L,
   caption = '학습표본에 대한 LDA 적용 결과: 사후확률값 및 추정범주'
 )
 ```
@@ -343,6 +346,7 @@ prediction_df <- bind_cols(binaryclass2, prediction_df)
 knitr::kable(
   prediction_df,
   align = c('r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'),
+  digits = 2L,
   caption = '학습표본에 대한 QDA 적용 결과: 판별함수값, 사후확률 및 추정범주'
 )
 ```
@@ -375,6 +379,7 @@ predict_df <- bind_cols(iris90, predict_df)
 knitr::kable(
   prediction_df,
   align = rep('r', ncol(prediction_df)),
+  digits = 2L,
   caption = '붗꽃 표본에 대한 LDA 적용 결과: 판별함수값, 사후확률 및 추정범주'
 )
 ```
@@ -385,6 +390,7 @@ knitr::kable(
 knitr::kable(
   predict_df %>% filter(class != .pred_class),
   align = rep('r', ncol(prediction_df)),
+  digits = 2L,  
   caption = '붗꽃 표본에 대한 LDA 오분류 객체'
 )
 ```
@@ -406,6 +412,7 @@ predict_df <- bind_cols(iris90, predict_df)
 knitr::kable(
   prediction_df,
   align = rep('r', ncol(prediction_df)),
+  digits = 2L,
   caption = '붗꽃 표본에 대한 QDA 적용 결과: 판별함수값, 사후확률 및 추정범주'
 )
 ```

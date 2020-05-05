@@ -9,4 +9,6 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang :=
 #' @importFrom rlang .data
+#' @importFrom rlang !!
+#' @importFrom rlang !!!
 NULL

@@ -19,7 +19,7 @@ fisher_ld <- function(.data, .group_var, ...) {
   mu_hat <- group_mean(.data, !!.group_var, !!!.variables)
 
   if (length(mu_hat) != 2L) {
-    stop("두 개의 범주가 존재해야 함.")
+    stop("number of levels of .group_var must be 2.")
   }
 
   sigma_hat <- pooled_variance(.data, !!.group_var, !!!.variables)
