@@ -4,7 +4,13 @@
 \alias{posterior_binary_logistic_regression}
 \title{이분 로지스틱 회귀분석 사후확률 추정.}
 \usage{
-posterior_binary_logistic_regression(.betas, .new_data, ..., .reflevel)
+posterior_binary_logistic_regression(
+  .betas,
+  .new_data,
+  ...,
+  .reflevel = 0L,
+  .poslevel = 1L
+)
 }
 \arguments{
 \item{.betas}{이분 로지스틱 회귀분석 계수}
@@ -13,17 +19,20 @@ posterior_binary_logistic_regression(.betas, .new_data, ..., .reflevel)
 
 \item{...}{범주 분류에 사용될 변수.}
 
-\item{.reflevel}{이분 범주에서 1(positive) 값을 지닐 범주.}
+\item{.reflevel}{이분 범주에서 0(negative) 값을 지닐 범주값. Default: 0.}
+
+\item{.poslevel}{이분 범주에서 1(positive) 값을 지닐 범주값. Default: 1.}
 }
 \value{
-사후확률.
+각 범주별 사후확률.
 }
 \description{
 주어진 계수를 이용하여 새 데이터에 대해 사후확률을 추정한다.
 }
 \examples{
 data(student, package = "dmtr")
-fit <- fit_binary_logistic_regression(student, y, x1, x2, x3, .reflevel = "우수")
-posterior_binary_logistic_regression(fit$betas, student, x1, x2, x3, .reflevel = "우수")
+fit <- fit_binary_logistic_regression(student, y, x1, x2, x3, .reflevel = "보통")
+posterior_binary_logistic_regression(fit$betas, student, x1, x2, x3,
+  .reflevel = "보통", .poslevel = "우수")
 
 }

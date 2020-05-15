@@ -19,7 +19,7 @@ fit_binary_logistic_regression(
 
 \item{...}{범주 분류에 사용될 변수.}
 
-\item{.reflevel}{이분 범주에서 1(positive) 값을 지닐 범주. NULL값일 때는 \code{.group_var} 범주
+\item{.reflevel}{이분 범주에서 0(negative) 값을 지닐 범주. NULL값일 때는 \code{.group_var} 범주
 레벨에서 마지막 레벨을 사용한다.}
 
 \item{.control}{\code{\link[stats]{optim}} 함수 수행 시 \code{control} 파라미터 리스트.}
