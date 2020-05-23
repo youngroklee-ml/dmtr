@@ -161,7 +161,6 @@ knitr::kable(
 
 # 명목 로지스틱 회귀모형 {#nominal-logistic-regression}
 
-
 종속변수가 셋 이상의 범주를 갖고 있으나 자연스러운 순서가 없는 경우, 기준범주 로짓모형이 널리 사용된다. 
 
 $N$개의 객체로 이루어진 학습데이터 $\{(\mathbf{x}_i, y_i)\}_{i = 1, \cdots, N}$를 아래와 같이 정의하자.
@@ -269,6 +268,57 @@ fit <- fit_multinom_logistic_regression(defecttype, y, x1, x2, .reflevel = 3L,
   .control = list(fnscale = -1, reltol = 1e-10, maxit = 100000))
 print(fit)
 ```
+
+
+
+# 서열 로지스틱 회귀모형 {#ordinal-logistic-regression}
+
+종속변수가 3개 이상의 범주를 가지며, 각 범주 간에 서열이 있는 경우에 대한 로지스틱 회귀모형을 소개한다. 
+
+### 누적 로짓모형 {#cumulative-logit-model}
+
+객체 $i$가 범주 $j$ 이하에 속할 누적확률을 $\kappa_{ij}$라 하자.
+
+\begin{equation*}
+\kappa_{ij} = P(y_i \leq j \, | \, \mathbf{x}_i), \, j = 1, \cdots, J
+\end{equation*}
+
+누적 로짓모형은 범주 누적확률의 로짓변환에 대한 선형 회귀모형이다.
+
+\begin{equation}
+\log \left( \frac{\kappa_{ij}}{1 - \kappa_{ij}} \right) = \beta_{0,j} + \boldsymbol\beta^\top \mathbf{x}_i, \, j = 1, \cdots, J - 1
+(\#eq:cumulative-logit)
+\end{equation}
+
+식 \@ref(eq:cumulative-logit)은 독립변수에 대한 계수 $\boldsymbol\beta$가 모든 범주에 대해 동일하며 절편(intercept) $\beta_{0,j}$만 범주에 따라 다른 비례 승산 모형(proportional odds model)이다. 즉, 범주에 관계없이 각 독립변수가 한 단위 증가할 때마다 로그 승산비는 동일하게 증가한다.
+
+모형의 추정은 \@ref(baseline-category-logit-model)절과 유사하게 다항분포를 사용한 최우추정법을 사용할 수 있다. 각 객체 $i$가 범주 $j$에 속할 확률은 아래와 같다.
+
+\begin{equation*}
+\begin{split}
+\pi_{ij} &= \kappa_{ij} - \kappa_{i,j-1}\\
+&= \frac{\exp (\beta_{0,j} + \boldsymbol\beta^\top \mathbf{x}_i)}{1 + \exp (\beta_{0,j} + \boldsymbol\beta^\top \mathbf{x}_i)} - \frac{\exp (\beta_{0,j-1} + \boldsymbol\beta^\top \mathbf{x}_i)}{1 + \exp (\beta_{0,j-1} + \boldsymbol\beta^\top \mathbf{x}_i)}, \, j = 2, \cdots, J - 1\\
+& \\
+\pi_{i1} &= \kappa_{i1}\\
+&= \frac{\exp (\beta_{0,1} + \boldsymbol\beta^\top \mathbf{x}_i)}{1 + \exp (\beta_{0,1} + \boldsymbol\beta^\top \mathbf{x}_i)}\\
+& \\
+\pi_{iJ} &= 1 - \kappa_{i,J-1}\\
+&= 1 - \frac{\exp (\beta_{0,J-1} + \boldsymbol\beta^\top \mathbf{x}_i)}{1 + \exp (\beta_{0,J-1} + \boldsymbol\beta^\top \mathbf{x}_i)}
+\end{split}
+(\#eq:cumulative-logit-prob)
+\end{equation*}
+
+로그 우도함수는
+
+\begin{equation*}
+\sum_{i = 1}^{n} \sum_{j = 1}^{J} y_i \log \pi_{ij}
+\end{equation*}
+
+이며, 이에 위에서 정리한 $\pi_{ij}$식을 대입하여 전개할 수 있다. 이 로그 우도함수는 concave 함수이므로[@pratt1981concavity], 각 계수에 대해 편미분하여 0이 되도록 하는 값을 구하는 방식으로 회귀모형을 추정할 수 있다.
+
+
+
+
 
 
 
