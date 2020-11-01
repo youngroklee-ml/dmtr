@@ -1,0 +1,117 @@
+---
+title: "회귀분석"
+output: 
+  bookdown::html_document2:
+    base_format: rmarkdown::html_vignette
+bibliography: book.bib
+biblio-style: apalike
+link-citations: yes
+vignette: >
+  %\VignetteIndexEntry{02 회귀분석}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message = FALSE}
+library(dmtr)
+library(dplyr)
+```
+
+# 데이터
+
+```{r biometric-data-load}
+data(biometric, package = "dmtr")
+```
+
+```{r biometric-data-print, echo = FALSE}
+knitr::kable(
+  biometric, 
+  booktabs = TRUE,
+  align = c('r', 'r', 'r'),
+  caption = '나이, 키, 몸무게 데이터'
+)
+```
+
+
+# 다중회귀모형 {#multiple-linear-regression}
+
+아래와 같이 $n$개의 객체와 $k$개의 독립변수($\mathbf{x}$)로 이루어지고 하나의 종속변수($y$)로 이루어진 선형 회귀모형을 정의하자.
+
+\begin{equation}
+y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik} + \epsilon_i
+(\#eq:multiple-linear-regression)
+\end{equation}
+
+이 때, 오차항 $\epsilon_i$은 서로 독립이고 동일한 정규분포 $N(0, \sigma^2)$을 따른다.
+
+위 회귀모형은 아래와 같이 행렬의 연산으로 표한할 수 있다.
+
+\begin{equation}
+\mathbf{y} = \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\epsilon} (\#eq:multiple-linear-regression-matrix)
+\end{equation}
+
+이 때,
+
+\[
+\mathbf{y} = \left[ \begin{array}{c}
+y_1 \\ y_2 \\ y_3 \\ \vdots \\ y_n
+\end{array} \right]
+\]
+
+\[
+\mathbf{X} = \left[ \begin{array}{c c c c c}
+1 & x_{11} & x_{12} & \cdots & x_{1k}\\
+1 & x_{21} & x_{22} & \cdots & x_{2k}\\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+1 & x_{n1} & x_{n2} & \cdots & x_{nk}
+\end{array} \right]
+\]
+
+\[
+\boldsymbol{\beta} = \left[ \begin{array}{c}
+\beta_0 \\ \beta_1 \\ \beta_2 \\ \vdots \\ \beta_k
+\end{array} \right]
+\]
+
+\[
+\boldsymbol{\epsilon} = \left[ \begin{array}{c}
+\epsilon_1 \\ \epsilon_2 \\ \epsilon_3 \\ \vdots \\ \epsilon_n
+\end{array} \right]
+\]
+
+로 정의되며, 
+
+\[
+E[\boldsymbol{\epsilon}] = \mathbf{0}, \, Var[\boldsymbol{\epsilon}] = \sigma^2 \mathbf{I} 
+\]
+
+이다.
+
+
+# 회귀계수추정 {#regression-coefficient-estimate}
+
+다중회귀모형에서 회귀계수들의 추정은 최소자승법(least squares method)에 근거하고 있다. 최소화시킬 오차항의 제곱합 $Q$는 다음과 같이 표현된다.
+
+\begin{equation}
+Q = \sum_{i = 1}^{n} \left(y_i - \left(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}\right) \right) ^ 2
+\end{equation}
+
+최소자승법에 의한 회귀계수의 추정은 제곱합 $Q$를 각 $\beta_j$에 대하여 편미분하고 이를 0으로 하는 다음과 같은 연립방정식을 풀어 $\hat{\beta}_j$들을 구하는 것이다.
+
+\begin{eqnarray*}
+\frac{\partial Q}{\partial \beta_0} &=& - 2 \sum_{i = 1}^{n} 1 \left(y_i - \left(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}\right) \right) = 0\\
+\frac{\partial Q}{\partial \beta_j} &=& - 2 \sum_{i = 1}^{n} x_{ij} \left(y_i - \left(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}\right) \right) = 0, \, j = 1, \cdots, k
+\end{eqnarray*}
+
+
+```{r}
+
+```
+
