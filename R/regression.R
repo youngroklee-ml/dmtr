@@ -32,7 +32,7 @@ gr_sum_of_squares_ols <- function(.beta, .x, .y) {
 #' @param .data 관측 데이터 프레임.
 #' @param .yvar 종속변수.
 #' @param .xvar 독립변수. 독립변수가 여러 개일 때는 벡터 형태로 제공한다. (e.g. \code{c(age, height)})
-#' @return 리스트. 최우추정 계수 벡터 \code{betas}. 헤시안 행렬 \code{hessian}.
+#' @return 리스트. 최우추정 계수 벡터 \code{betas}, 헤시안 행렬 \code{hessian}, 평균잔차제곱 \code{mse}, 자유도 \code{df}.
 #'
 #' @examples
 #' data(biometric, package = "dmtr")
@@ -72,5 +72,60 @@ fit_linear_regression <- function(.data, .yvar, .xvar) {
   hessian <- fit$hessian
   rownames(hessian) <- colnames(hessian) <- colnames(X)
 
-  return(list(betas = betas, hessian = hessian))
+  df <- length(y) - length(betas)
+  mse <- fit$value / df
+
+  return(list(betas = betas, hessian = hessian, mse = mse, df = df))
 }
+
+
+#' 다중선형회귀모형 미래반응치 예측.
+#'
+#' 주어진 계수를 이용하여 새 데이터에 대해 종속변수값을 예측한다.
+#'
+#' @param .fit 회귀모형 추정 결과.
+#' @param .new_data 새 관측 데이터 프레임.
+#' @param .xvar 예측에 사용될 변수.
+#' @param .interval 예측구간. 0인 경우 예측구간을 구하지 않으며, 0 과 1 사이일 경우 \code{(100 * .interval)}%의 예측구간을 구한다.
+#' @return 애측값 데이터프레임.
+#'
+#' @examples
+#' data(biometric, package = "dmtr")
+#' fit <- fit_linear_regression(biometric, weight, c(age, height))
+#' predict_linear_regression(fit, biometric, c(age, height))
+#' predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, height), 0.95)
+#'
+#' @export
+predict_linear_regression <- function(
+  .fit,
+  .new_data,
+  .xvar,
+  .interval = 0) {
+  .xvar <- rlang::enquo(.xvar)
+
+  betas <- matrix(.fit$betas, ncol = 1L)
+
+  X <- .new_data %>%
+    dplyr::select(!!.xvar) %>%
+    dplyr::mutate(`(Intercept)` = 1, .before = 1L) %>%
+    as.matrix()
+
+  res <- dplyr::tibble(
+    .pred = as.vector(X %*% betas)
+  )
+
+  if (.interval > 0 && .interval < 1) {
+    xtx <- solve(.fit$hessian / 2)
+    se <- sqrt(.fit$mse * apply(X, 1, function(x, xtx) {t(x) %*% xtx %*% x}, xtx = xtx))
+    res <- res %>%
+      dplyr::mutate(
+        .se = se,
+        .pi_lower = .pred + qt(0.5 - .interval / 2, .fit$df) * sqrt(.fit$mse + se ^ 2),
+        .pi_upper = .pred + qt(0.5 + .interval / 2, .fit$df) * sqrt(.fit$mse + se ^ 2)
+      )
+  }
+
+  return (res)
+}
+
+
