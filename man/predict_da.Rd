@@ -7,7 +7,7 @@
 predict_da(
   .f,
   .new_data,
-  ...,
+  .xvar,
   .include_score = FALSE,
   .include_posterior = FALSE,
   .include_class = TRUE
@@ -18,7 +18,7 @@ predict_da(
 
 \item{.new_data}{새 관측 데이터 프레임.}
 
-\item{...}{범주 분류에 사용될 변수.}
+\item{.xvar}{범주 분류에 사용될 변수.}
 
 \item{.include_score}{TRUE이면 범주별 판별함수값을 결과에 저장. default = FALSE.}
 
@@ -34,7 +34,7 @@ predict_da(
 }
 \examples{
 data(binaryclass2, package = "dmtr")
-f <- ld_fun(binaryclass2, class, x1, x2)
-predict_da(f, binaryclass2, x1, x2, .include_posterior = TRUE)
+f <- ld_fun(binaryclass2, class, c(x1, x2))
+predict_da(f, binaryclass2, c(x1, x2), .include_posterior = TRUE)
 
 }

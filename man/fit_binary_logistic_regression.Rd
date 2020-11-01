@@ -7,7 +7,7 @@
 fit_binary_logistic_regression(
   .data,
   .group_var,
-  ...,
+  .xvar,
   .reflevel = NULL,
   .control = list(fnscale = -1, maxit = 10000)
 )
@@ -17,7 +17,7 @@ fit_binary_logistic_regression(
 
 \item{.group_var}{범주변수.}
 
-\item{...}{범주 분류에 사용될 변수.}
+\item{.xvar}{범주 분류에 사용될 변수.}
 
 \item{.reflevel}{이분 범주에서 0(negative) 값을 지닐 범주. NULL값일 때는 \code{.group_var} 범주
 레벨에서 마지막 레벨을 사용한다.}
@@ -32,6 +32,6 @@ fit_binary_logistic_regression(
 }
 \examples{
 data(student, package = "dmtr")
-fit_binary_logistic_regression(student, y, x1, x2, x3, .reflevel = "우수")
+fit_binary_logistic_regression(student, y, c(x1, x2, x3), .reflevel = "우수")
 
 }

@@ -4,14 +4,14 @@
 \alias{fisher_ld_threshold}
 \title{피셔 선형 판별 함수 분류 경계값.}
 \usage{
-fisher_ld_threshold(.data, .group_var, ...)
+fisher_ld_threshold(.data, .group_var, .xvar)
 }
 \arguments{
 \item{.data}{관측 데이터 프레임.}
 
 \item{.group_var}{범주변수.}
 
-\item{...}{범주 분류에 사용될 변수.}
+\item{.xvar}{범주 분류에 사용될 변수.}
 }
 \value{
 선형 함수의 분류 경계값.
@@ -21,6 +21,6 @@ fisher_ld_threshold(.data, .group_var, ...)
 }
 \examples{
 data(binaryclass2, package = "dmtr")
-fisher_ld_threshold(binaryclass2, class, x1, x2)
+fisher_ld_threshold(binaryclass2, class, c(x1, x2))
 
 }

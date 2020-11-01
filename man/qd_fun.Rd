@@ -4,14 +4,14 @@
 \alias{qd_fun}
 \title{범주별 판별함수 - 이차 판별 분석.}
 \usage{
-qd_fun(.data, .group_var, ...)
+qd_fun(.data, .group_var, .xvar)
 }
 \arguments{
 \item{.data}{관측 데이터 프레임.}
 
 \item{.group_var}{범주변수.}
 
-\item{...}{범주 분류에 사용될 변수.}
+\item{.xvar}{범주 분류에 사용될 변수.}
 }
 \value{
 범주별 판별 함수.
@@ -21,6 +21,6 @@ qd_fun(.data, .group_var, ...)
 }
 \examples{
 data(binaryclass2, package = "dmtr")
-f <- qd_fun(binaryclass2, class, x1, x2)
+f <- qd_fun(binaryclass2, class, c(x1, x2))
 
 }

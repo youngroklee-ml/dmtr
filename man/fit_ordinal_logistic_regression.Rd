@@ -7,9 +7,9 @@
 fit_ordinal_logistic_regression(
   .data,
   .group_var,
-  ...,
+  .xvar,
   .type = "cumulative",
-  .control = list(fnscale = -1, maxit = 10000)
+  .control = list(fnscale = -1, maxit = 1000)
 )
 }
 \arguments{
@@ -17,7 +17,7 @@ fit_ordinal_logistic_regression(
 
 \item{.group_var}{범주변수.}
 
-\item{...}{범주 분류에 사용될 변수.}
+\item{.xvar}{범주 분류에 사용될 변수.}
 
 \item{.type}{로짓모형의 종류. "cumulative": 누적 로짓모형, "adjacent": 인근범주 로짓모형}
 
@@ -28,15 +28,14 @@ fit_ordinal_logistic_regression(
 }
 \description{
 주어진 데이터에 대해 서열형 로지스틱 회귀모형 계수를 추정한다.
-TO DO: 초기 파라미터 값에 따라 모형 추정 결과가 다른 문제 해결
 }
 \examples{
 data(telconnection, package = "dmtr")
 fit_ordinal_logistic_regression(
-  telconnection, y, N, L
+  telconnection, y, c(N, L)
 )
 fit_ordinal_logistic_regression(
-  telconnection, y, N, L, .type = "adjacent"
+  telconnection, y, d(N, L), .type = "adjacent"
 )
 
 }

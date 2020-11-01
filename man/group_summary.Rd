@@ -4,14 +4,14 @@
 \alias{group_summary}
 \title{범주별 통계치. Group summary.}
 \usage{
-group_summary(.data, .group_var, ...)
+group_summary(.data, .group_var, .xvar)
 }
 \arguments{
 \item{.data}{관측 데이터 프레임. A raw data frame.}
 
 \item{.group_var}{범주변수. A variable to group by.}
 
-\item{...}{관심 변수. One or more variables separated by commas. Each variable
+\item{.xvar}{관심 변수. One or more variables separated by commas within \code{c()}. Each variable
 needs to be a numeric column of \code{.data}.}
 }
 \value{
@@ -21,11 +21,11 @@ needs to be a numeric column of \code{.data}.}
 범주별 관측객체수, 평균벡터, 분산-공분산행렬 등 통계치를 계산한다. \code{group_summary} returns a list of statistics for each group.
 }
 \details{
-이 함수는 데이터 프레임 \code{.data} 내의 범주변수 \code{.group_var}의 범주별로 \code{...}에 주어진
+이 함수는 데이터 프레임 \code{.data} 내의 범주변수 \code{.group_var}의 범주별로 \code{.xvar}에 주어진
 변수들에 대한 통계치를 계산하여 리스트로 제공한다.
 }
 \examples{
 data(binaryclass2, package = "dmtr")
-group_summary(binaryclass2, class, x1, x2)
+group_summary(binaryclass2, class, c(x1, x2))
 
 }

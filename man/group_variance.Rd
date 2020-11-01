@@ -4,14 +4,14 @@
 \alias{group_variance}
 \title{범주별 표본 분산-공분산행렬. Within-group variance-covariance matrix.}
 \usage{
-group_variance(.data, .group_var, ...)
+group_variance(.data, .group_var, .xvar)
 }
 \arguments{
 \item{.data}{관측 데이터 프레임. A raw data frame.}
 
 \item{.group_var}{범주변수. A variable to group by.}
 
-\item{...}{분산-공분산 행렬에 포함될 변수. One or more variables separated by commas. Each
+\item{.xvar}{분산-공분산 행렬에 포함될 변수. One or more variables separated by commas within \code{c()}. Each
 variable needs to be a numeric column of \code{.data}.}
 }
 \value{
@@ -24,14 +24,14 @@ covariance matrices each of which represents covariance matrix within each
 group.
 }
 \details{
-이 함수는 데이터 프레임 \code{.data} 내의 범주변수 \code{.group_var}의 범주별로 \code{...}에 주어진
+이 함수는 데이터 프레임 \code{.data} 내의 범주변수 \code{.group_var}의 범주별로 \code{.xvar}에 주어진
 변수들에 대한 관측 데이터의 표본 분산-공분산 행렬을 범주별 분산-공분산행렬로 추정한다. This function aggregated
 \code{.data} into \code{.group_var} level to have a column \code{.group_var}
-as group variable and columns \code{...} that represent group mean value of
-\code{...} in the original data \code{.data}.
+as group variable and columns \code{.xvar} that represent group mean value of
+\code{.xvar} in the original data \code{.data}.
 }
 \examples{
 data(binaryclass2, package = "dmtr")
-group_variance(binaryclass2, class, x1, x2)
+group_variance(binaryclass2, class, c(x1, x2))
 
 }

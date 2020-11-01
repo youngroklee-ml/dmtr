@@ -4,25 +4,25 @@
 #'
 #' @param .data 관측 데이터 프레임.
 #' @param .group_var 범주변수.
-#' @param ... 범주 분류에 사용될 변수.
+#' @param .xvar 범주 분류에 사용될 변수.
 #' @return 선형 함수의 계수 벡터.
 #'
 #' @examples
 #' data(binaryclass2, package = "dmtr")
-#' fisher_ld(binaryclass2, class, x1, x2)
+#' fisher_ld(binaryclass2, class, c(x1, x2))
 #'
 #' @export
-fisher_ld <- function(.data, .group_var, ...) {
+fisher_ld <- function(.data, .group_var, .xvar) {
   .group_var <- rlang::enquo(.group_var)
-  .variables <- rlang::enquos(...)
+  .xvar <- rlang::enquo(.xvar)
 
-  mu_hat <- group_mean(.data, !!.group_var, !!!.variables)
+  mu_hat <- group_mean(.data, !!.group_var, !!.xvar)
 
   if (length(mu_hat) != 2L) {
     stop("number of levels of .group_var must be 2.")
   }
 
-  sigma_hat <- pooled_variance(.data, !!.group_var, !!!.variables)
+  sigma_hat <- pooled_variance(.data, !!.group_var, !!.xvar)
 
   res <- solve(sigma_hat) %*%
     as.matrix(mu_hat[[1]] - mu_hat[[2]], ncol = 1L) %>%
@@ -41,20 +41,20 @@ fisher_ld <- function(.data, .group_var, ...) {
 #'
 #' @param .data 관측 데이터 프레임.
 #' @param .group_var 범주변수.
-#' @param ... 범주 분류에 사용될 변수.
+#' @param .xvar 범주 분류에 사용될 변수.
 #' @return 선형 함수의 분류 경계값.
 #'
 #' @examples
 #' data(binaryclass2, package = "dmtr")
-#' fisher_ld_threshold(binaryclass2, class, x1, x2)
+#' fisher_ld_threshold(binaryclass2, class, c(x1, x2))
 #'
 #' @export
-fisher_ld_threshold <- function(.data, .group_var, ...) {
+fisher_ld_threshold <- function(.data, .group_var, .xvar) {
   .group_var <- rlang::enquo(.group_var)
-  .variables <- rlang::enquos(...)
+  .xvar <- rlang::enquo(.xvar)
 
-  w_hat <- fisher_ld(.data, !!.group_var, !!!.variables)
-  mean_vec <- .data %>% dplyr::select(!!!.variables) %>% colMeans()
+  w_hat <- fisher_ld(.data, !!.group_var, !!.xvar)
+  mean_vec <- .data %>% dplyr::select(!!.xvar) %>% colMeans()
 
   res <- sum(w_hat * mean_vec)
 
@@ -69,24 +69,24 @@ fisher_ld_threshold <- function(.data, .group_var, ...) {
 #' @param .w 선형 함수 계수.
 #' @param .z 선형 함수 분류 경계치.
 #' @param .newdata 새 데이터.
-#' @param ... 범주 분류에 사용될 변수.
+#' @param .xvar 범주 분류에 사용될 변수.
 #' @param .levels 범주.
 #' @return 분류 예측값을 포함한 데이터 프레임.
 #'
 #' @examples
 #' data(binaryclass2, package = "dmtr")
-#' w <- fisher_ld(binaryclass2, class, x1, x2)
-#' z <- fisher_ld_threshold(binaryclass2, class, x1, x2)
-#' pred <- fisher_ld_prediction(w, z, binaryclass2, x1, x2, .levels = attr(w, "group"))
+#' w <- fisher_ld(binaryclass2, class, c(x1, x2))
+#' z <- fisher_ld_threshold(binaryclass2, class, c(x1, x2))
+#' pred <- fisher_ld_prediction(w, z, binaryclass2, c(x1, x2), .levels = attr(w, "group"))
 #'
 #' @export
-fisher_ld_prediction <- function(.w, .z, .newdata, ..., .levels = c(1L, 2L)) {
-  .variables <- rlang::enquos(...)
+fisher_ld_prediction <- function(.w, .z, .newdata, .xvar, .levels = c(1L, 2L)) {
+  .xvar <- rlang::enquo(.xvar)
 
   .newdata %>%
     dplyr::rowwise() %>%
     dplyr::mutate(
-      z = crossprod(c(!!!.variables), .w),
+      z = crossprod(c(!!.xvar), .w),
       .pred_class = dplyr::if_else(z > .z, .levels[1], .levels[2])
     )
 }
@@ -98,21 +98,21 @@ fisher_ld_prediction <- function(.w, .z, .newdata, ..., .levels = c(1L, 2L)) {
 #'
 #' @param .data 관측 데이터 프레임.
 #' @param .group_var 범주변수.
-#' @param ... 범주 분류에 사용될 변수.
+#' @param .xvar 범주 분류에 사용될 변수.
 #' @return 범주별 판별 함수.
 #'
 #' @examples
 #' data(binaryclass2, package = "dmtr")
-#' f <- ld_fun(binaryclass2, class, x1, x2)
+#' f <- ld_fun(binaryclass2, class, c(x1, x2))
 #'
 #' @export
-ld_fun <- function(.data, .group_var, ...) {
+ld_fun <- function(.data, .group_var, .xvar) {
   .group_var <- rlang::enquo(.group_var)
-  .variables <- rlang::enquos(...)
+  .xvar <- rlang::enquo(.xvar)
 
-  summ <- group_summary(.data, !!.group_var, !!!.variables)
+  summ <- group_summary(.data, !!.group_var, !!.xvar)
 
-  sigma_hat <- pooled_variance(.data, !!.group_var, !!!.variables)
+  sigma_hat <- pooled_variance(.data, !!.group_var, !!.xvar)
   sigma_hat_inv <- solve(sigma_hat)
 
   fn <- purrr::map(summ, ~ function(x) {
@@ -140,21 +140,21 @@ ld_fun <- function(.data, .group_var, ...) {
 #'
 #' @param .f 판별함수 리스트.
 #' @param .new_data 새 관측 데이터 프레임.
-#' @param ... 범주 함수에 사용될 입력 변수.
+#' @param .xvar 범주 함수에 사용될 입력 변수.
 #' @return 새 관측 데이터에 대한 판별함수 값을 포함한 데이터 프레임.
 #'
 #' @examples
 #' data(binaryclass2, package = "dmtr")
-#' f <- ld_fun(binaryclass2, class, x1, x2)
-#' score_da(f, binaryclass2, x1, x2)
+#' f <- ld_fun(binaryclass2, class, c(x1, x2))
+#' score_da(f, binaryclass2, c(x1, x2))
 #'
 #' @export
-score_da <- function(.f, .new_data, ...) {
-  .variables <- rlang::enquos(...)
+score_da <- function(.f, .new_data, .xvar) {
+  .xvar <- rlang::enquo(.xvar)
 
   u_df <- purrr::map_dfc(f,
     ~ .new_data %>%
-      dplyr::select(!!!.variables) %>%
+      dplyr::select(!!.xvar) %>%
       dplyr::transmute(u = apply(., 1, .x))
   )
 
@@ -169,7 +169,7 @@ score_da <- function(.f, .new_data, ...) {
 #'
 #' @param .f 판별함수 리스트.
 #' @param .new_data 새 관측 데이터 프레임.
-#' @param ... 범주 분류에 사용될 변수.
+#' @param .xvar 범주 분류에 사용될 변수.
 #' @param .include_score TRUE이면 범주별 판별함수값을 결과에 저장. default = FALSE.
 #' @param .include_posterior TRUE이면 사후확률값을 결과에 저장. default = FALSE.
 #' @param .include_class TRUE이면 추정범주값을 결과에 저장. default = TRUE.
@@ -177,23 +177,23 @@ score_da <- function(.f, .new_data, ...) {
 #'
 #' @examples
 #' data(binaryclass2, package = "dmtr")
-#' f <- ld_fun(binaryclass2, class, x1, x2)
-#' predict_da(f, binaryclass2, x1, x2, .include_posterior = TRUE)
+#' f <- ld_fun(binaryclass2, class, c(x1, x2))
+#' predict_da(f, binaryclass2, c(x1, x2), .include_posterior = TRUE)
 #'
 #' @export
-predict_da <- function(.f, .new_data, ...,
+predict_da <- function(.f, .new_data, .xvar,
   .include_score = FALSE,
   .include_posterior = FALSE,
   .include_class = TRUE
 ) {
-  .variables <- rlang::enquos(...)
+  .xvar <- rlang::enquo(.xvar)
 
   if (!any(.include_score, .include_posterior, .include_class)) {
     stop('at least one of followings needs to be TRUE: \n
       .include_score, .include_posterior, .include_class')
   }
 
-  u_df <- score_da(.f, .new_data, !!!.variables)
+  u_df <- score_da(.f, .new_data, !!.xvar)
 
   p_df <- u_df %>%
     dplyr::mutate_all(exp) %>%
@@ -220,19 +220,19 @@ predict_da <- function(.f, .new_data, ...,
 #'
 #' @param .data 관측 데이터 프레임.
 #' @param .group_var 범주변수.
-#' @param ... 범주 분류에 사용될 변수.
+#' @param .xvar 범주 분류에 사용될 변수.
 #' @return 범주별 판별 함수.
 #'
 #' @examples
 #' data(binaryclass2, package = "dmtr")
-#' f <- qd_fun(binaryclass2, class, x1, x2)
+#' f <- qd_fun(binaryclass2, class, c(x1, x2))
 #'
 #' @export
-qd_fun <- function(.data, .group_var, ...) {
+qd_fun <- function(.data, .group_var, .xvar) {
   .group_var <- rlang::enquo(.group_var)
-  .variables <- rlang::enquos(...)
+  .xvar <- rlang::enquo(.xvar)
 
-  summ <- group_summary(.data, !!.group_var, !!!.variables)
+  summ <- group_summary(.data, !!.group_var, !!.xvar)
 
   fn <- purrr::map(summ, ~ function(x) {
     if (is.list(x)) x <- unlist(x)

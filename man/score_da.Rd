@@ -4,14 +4,14 @@
 \alias{score_da}
 \title{범주별 판별함수값 계산.}
 \usage{
-score_da(.f, .new_data, ...)
+score_da(.f, .new_data, .xvar)
 }
 \arguments{
 \item{.f}{판별함수 리스트.}
 
 \item{.new_data}{새 관측 데이터 프레임.}
 
-\item{...}{범주 함수에 사용될 입력 변수.}
+\item{.xvar}{범주 함수에 사용될 입력 변수.}
 }
 \value{
 새 관측 데이터에 대한 판별함수 값을 포함한 데이터 프레임.
@@ -21,7 +21,7 @@ score_da(.f, .new_data, ...)
 }
 \examples{
 data(binaryclass2, package = "dmtr")
-f <- ld_fun(binaryclass2, class, x1, x2)
-score_da(f, binaryclass2, x1, x2)
+f <- ld_fun(binaryclass2, class, c(x1, x2))
+score_da(f, binaryclass2, c(x1, x2))
 
 }

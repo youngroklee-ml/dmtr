@@ -81,7 +81,7 @@ z = \mathbf{w}^\top \mathbf{x} (\#eq:fisher-discriminant-function)
 Table \@ref(tab:fisher-data-print)에 주어진 학습표본을 이용하여 피셔 판별함수를 구해보도록 하자. 우선 각 범주별 관측수 $n_1, n_2$, 평균벡터 $\hat{\boldsymbol\mu}_1, \hat{\boldsymbol\mu}_2$, 그리고 범주별 표본 분산-공분산행렬 $\mathbf{S}_1, \mathbf{S}_2$를 다음과 같이 함수 `group_summary()`를 사용하여 구한다.
 
 ```{r}
-summary_within_group <- group_summary(binaryclass2, class, x1, x2)
+summary_within_group <- group_summary(binaryclass2, class, c(x1, x2))
 print(summary_within_group)
 ```
 
@@ -94,7 +94,7 @@ print(summary_within_group)
 
 
 ```{r}
-sigma_hat <- pooled_variance(binaryclass2, class, x1, x2)
+sigma_hat <- pooled_variance(binaryclass2, class, c(x1, x2))
 print(sigma_hat)
 ```
 
@@ -115,7 +115,7 @@ print(w_hat)
 위 피셔 판별함수를 구하는 과정을 하나의 함수 `fisher_ld()`로 구현하였다.
 
 ```{r}
-w_hat <- fisher_ld(binaryclass2, class, x1, x2)
+w_hat <- fisher_ld(binaryclass2, class, c(x1, x2))
 print(w_hat)
 ```
 
@@ -142,7 +142,7 @@ print(z_mean)
 위 분류 경계값을 구하는 과정을 함수 `fisher_ld_threshold()`로 구현하였다.
 
 ```{r}
-z_mean <- fisher_ld_threshold(binaryclass2, class, x1, x2)
+z_mean <- fisher_ld_threshold(binaryclass2, class, c(x1, x2))
 print(z_mean)
 ```
 
@@ -173,8 +173,7 @@ prediction_df <- fisher_ld_prediction(
   .w = w_hat, 
   .z = z_mean, 
   .newdata = binaryclass2, 
-  x1,
-  x2,
+  .xvar = c(x1, x2),
   .levels = attr(w_hat, "group")
 )
 ```
@@ -217,7 +216,7 @@ u_k(\mathbf{x}) = \boldsymbol\mu_k^\top \boldsymbol\Sigma^{-1}\mathbf{x} - \frac
 로 정의한다. 위 판별함수를 함수 `ld_fun()`로 구현하였다.
 
 ```{r}
-f <- ld_fun(binaryclass2, class, x1, x2)
+f <- ld_fun(binaryclass2, class, c(x1, x2))
 ```
 
 위 함수를 이용하여 학습표본에 대해 판별함수값을 다음과 같이 얻을 수 있다.
@@ -299,7 +298,7 @@ knitr::kable(
 위와 같이 새 데이터에 대해 판별함수값, 사후확률 및 범주추정을 수행하는 함수를 `predict_da()`로 구현하였다.
 
 ```{r}
-predict_da(f, .new_data = binaryclass2, x1, x2, 
+predict_da(f, .new_data = binaryclass2, c(x1, x2), 
   .include_score = TRUE,
   .include_posterior = TRUE,
   .include_class = TRUE)
@@ -328,13 +327,13 @@ u_k(\mathbf{x}) = - \frac{1}{2} (\mathbf{x} - \boldsymbol\mu_k)^\top \boldsymbol
 위 판별함수를 데이터로부터 얻는 함수를 `qd_fun()`로 구현하였다.
 
 ```{r}
-f <- qd_fun(binaryclass2, class, x1, x2)
+f <- qd_fun(binaryclass2, class, c(x1, x2))
 ```
 
 이후, 선형판별함수에서와 같이 함수 `predict_df()`를 이용하여 판별함수값, 사후확률 및 범주추정값을 얻을 수 있다.
 
 ```{r}
-prediction_df <- predict_da(f, .new_data = binaryclass2, x1, x2, 
+prediction_df <- predict_da(f, .new_data = binaryclass2, c(x1, x2), 
   .include_score = TRUE,
   .include_posterior = TRUE,
   .include_class = TRUE)
@@ -368,8 +367,8 @@ data(iris90, package = "dmtr")
 함수 `ld_fun()`을 이용하여 선형 판별함수를 구하고, `predict_da()`를 이용하여 범주를 추정한다.
 
 ```{r}
-f <- ld_fun(iris90, class, x1, x2, x3, x4)
-predict_df <- predict_da(f, .new_data = iris90, x1, x2, x3, x4, 
+f <- ld_fun(iris90, class, c(x1, x2, x3, x4))
+predict_df <- predict_da(f, .new_data = iris90, c(x1, x2, x3, x4), 
   .include_posterior = TRUE)
 
 predict_df <- bind_cols(iris90, predict_df)
@@ -401,8 +400,8 @@ knitr::kable(
 함수 `qd_fun()`을 이용하여 이차 판별함수를 구하고, `predict_da()`를 이용하여 범주를 추정한다.
 
 ```{r}
-f <- qd_fun(iris90, class, x1, x2, x3, x4)
-predict_df <- predict_da(f, .new_data = iris90, x1, x2, x3, x4, 
+f <- qd_fun(iris90, class, c(x1, x2, x3, x4))
+predict_df <- predict_da(f, .new_data = iris90, c(x1, x2, x3, x4), 
   .include_posterior = TRUE)
 
 predict_df <- bind_cols(iris90, predict_df)

@@ -106,15 +106,15 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 
 회귀계수를 추정하는 함수를 `fit_binary_logistic_regression()`으로 구현하였다.
 
-```{r}
-fit <- fit_binary_logistic_regression(student, y, x1, x2, x3, .reflevel = "보통")
+```{r fit-binary-logistic-regression}
+fit <- fit_binary_logistic_regression(student, y, c(x1, x2, x3), .reflevel = "보통")
 print(fit)
 ```
 
 
 위 추정계수와 헤시안 행렬(Hessian matrix)를 이용하여 아래와 같이 결과를 요약할 수 있다.
 
-```{r}
+```{r coef-binary-logistic-regression}
 fit_summary_df <- tibble(
   term = names(fit$betas),
   estimate = fit$betas,
@@ -137,9 +137,9 @@ knitr::kable(
 
 위 추정된 계수를 이용하여 사후확률을 계산하는 함수 회귀계수를 추정하는 함수를 `posterior_binary_logistic_regression()`로 구현하였다.
 
-```{r}
+```{r binary-logistic-reg-posterior}
 posterior_df <- posterior_binary_logistic_regression(
-  fit$betas, .new_data = student, x1, x2, x3, 
+  fit$betas, .new_data = student, c(x1, x2, x3), 
   .reflevel = "보통",
   .poslevel = "우수"
 )
@@ -263,8 +263,8 @@ Table \@ref(tab:nominal-logistic-reg-train-data-print)의 학습데이터에 대
 
 회귀계수를 추정하는 함수를 `fit_multinom_logistic_regression()`으로 구현하였다.
 
-```{r}
-fit <- fit_multinom_logistic_regression(defecttype, y, x1, x2, .reflevel = 3L,
+```{r fit-multinom-logistic-regression}
+fit <- fit_multinom_logistic_regression(defecttype, y, c(x1, x2), .reflevel = 3L,
   .control = list(fnscale = -1, reltol = 1e-10, maxit = 100000))
 print(fit)
 ```
@@ -275,7 +275,20 @@ print(fit)
 
 종속변수가 3개 이상의 범주를 가지며, 각 범주 간에 서열이 있는 경우에 대한 로지스틱 회귀모형을 소개한다. 
 
-### 누적 로짓모형 {#cumulative-logit-model}
+## 데이터
+
+```{r ordinal-logistic-reg-train-data-load}
+data(telconnection, package = "dmtr")
+```
+
+```{r ordinal-logistic-reg-train-data-print, echo = FALSE}
+knitr::kable(telconnection, booktabs = TRUE,
+  align = c('r', 'r', 'r'),
+  label = c('잡음(N)', '손실(L)', '만족도(y)'),
+  caption = '성능변수에 따른 통신 만족도')
+```
+
+## 누적 로짓모형 {#cumulative-logit-model}
 
 객체 $i$가 범주 $j$ 이하에 속할 누적확률을 $\kappa_{ij}$라 하자.
 
@@ -292,7 +305,7 @@ print(fit)
 
 식 \@ref(eq:cumulative-logit)은 독립변수에 대한 계수 $\boldsymbol\beta$가 모든 범주에 대해 동일하며 절편(intercept) $\beta_{0,j}$만 범주에 따라 다른 비례 승산 모형(proportional odds model)이다. 즉, 범주에 관계없이 각 독립변수가 한 단위 증가할 때마다 로그 승산비는 동일하게 증가한다.
 
-모형의 추정은 \@ref(baseline-category-logit-model)절과 유사하게 다항분포를 사용한 최우추정법을 사용할 수 있다. 각 객체 $i$가 범주 $j$에 속할 확률은 아래와 같다.
+모형의 추정은 \@ref(nominal-logistic-regression)절과 유사하게 다항분포를 사용한 최우추정법을 사용할 수 있다. 각 객체 $i$가 범주 $j$에 속할 확률은 아래와 같다.
 
 \begin{equation*}
 \begin{split}
@@ -316,8 +329,14 @@ print(fit)
 
 이며, 이에 위에서 정리한 $\pi_{ij}$식을 대입하여 전개할 수 있다. 이 로그 우도함수는 concave 함수이므로[@pratt1981concavity], 각 계수에 대해 편미분하여 0이 되도록 하는 값을 구하는 방식으로 회귀모형을 추정할 수 있다.
 
+회귀계수를 추정하는 함수를 `fit_ordinal_logistic_regression()`으로 구현하였다.
 
-
+```{r fit-ordinal-logistic-regression}
+fit <- fit_ordinal_logistic_regression(
+  telconnection, y, c(N, L)
+)
+print(fit)
+```
 
 
 

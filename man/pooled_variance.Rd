@@ -4,14 +4,14 @@
 \alias{pooled_variance}
 \title{합동 분산-공분산행렬. Pooled variance.}
 \usage{
-pooled_variance(.data, .group_var, ...)
+pooled_variance(.data, .group_var, .xvar)
 }
 \arguments{
 \item{.data}{관측 데이터 프레임. A raw data frame.}
 
 \item{.group_var}{범주변수. A variable to group by.}
 
-\item{...}{분산-공분산 행렬에 포함될 변수. One or more variables separated by commas. Each
+\item{.xvar}{분산-공분산 행렬에 포함될 변수. One or more variables separated by commas within \code{c()}. Each
 variable needs to be a numeric column of \code{.data}.}
 }
 \value{
@@ -23,6 +23,6 @@ variable needs to be a numeric column of \code{.data}.}
 }
 \examples{
 data(binaryclass2, package = "dmtr")
-pooled_variance(binaryclass2, class, x1, x2)
+pooled_variance(binaryclass2, class, c(x1, x2))
 
 }

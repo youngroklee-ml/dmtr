@@ -7,7 +7,7 @@
 posterior_binary_logistic_regression(
   .betas,
   .new_data,
-  ...,
+  .xvar,
   .reflevel = 0L,
   .poslevel = 1L
 )
@@ -17,7 +17,7 @@ posterior_binary_logistic_regression(
 
 \item{.new_data}{새 관측 데이터 프레임.}
 
-\item{...}{범주 분류에 사용될 변수.}
+\item{.xvar}{범주 분류에 사용될 변수.}
 
 \item{.reflevel}{이분 범주에서 0(negative) 값을 지닐 범주값. Default: 0.}
 
@@ -31,8 +31,8 @@ posterior_binary_logistic_regression(
 }
 \examples{
 data(student, package = "dmtr")
-fit <- fit_binary_logistic_regression(student, y, x1, x2, x3, .reflevel = "보통")
-posterior_binary_logistic_regression(fit$betas, student, x1, x2, x3,
+fit <- fit_binary_logistic_regression(student, y, c(x1, x2, x3), .reflevel = "보통")
+posterior_binary_logistic_regression(fit$betas, student, c(x1, x2, x3),
   .reflevel = "보통", .poslevel = "우수")
 
 }

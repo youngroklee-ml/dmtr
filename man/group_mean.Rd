@@ -4,33 +4,33 @@
 \alias{group_mean}
 \title{범주별 평균벡터. Group mean.}
 \usage{
-group_mean(.data, .group_var, ...)
+group_mean(.data, .group_var, .xvar)
 }
 \arguments{
 \item{.data}{관측 데이터 프레임. A raw data frame.}
 
 \item{.group_var}{범주변수. A variable to group by.}
 
-\item{...}{평균벡터에 포함될 변수. One or more variables separated by commas. Each variable needs to
+\item{.xvar}{평균벡터에 포함될 변수. One or more variables separated by commas within \code{c()}. Each variable needs to
 be a numeric column of \code{.data}.}
 }
 \value{
 리스트 형태로, 각 리스트의 원소는 각 범주의 평균벡터를 나타낸다. A list of mean vector, that each list element represent each group,
-  and has a vector of mean of \code{...}.
+  and has a vector of mean of \code{.xvar}.
 }
 \description{
 각 범주별 평균벡터를 추정한다. \code{group_mean} returns mean of each variable within each
 group.
 }
 \details{
-이 함수는 데이터 프레임 \code{.data} 내의 범주변수 \code{.group_var}의 범주별로 \code{...}에 주어진
+이 함수는 데이터 프레임 \code{.data} 내의 범주변수 \code{.group_var}의 범주별로 \code{.xvar}에 주어진
 변수들에 대한 관측 데이터의 평균을 범주별 평균벡터로 추정한다. This function aggregated \code{.data}
 into \code{.group_var} level to have a column \code{.group_var} as group
-variable and columns \code{...} that represent group mean value of
-\code{...} in the original data \code{.data}.
+variable and columns \code{.xvar} that represent group mean value of
+\code{.xvar} in the original data \code{.data}.
 }
 \examples{
 data(binaryclass2, package = "dmtr")
-group_mean(binaryclass2, class, x1, x2)
+group_mean(binaryclass2, class, c(x1, x2))
 
 }

@@ -7,9 +7,9 @@
 fit_multinom_logistic_regression(
   .data,
   .group_var,
-  ...,
+  .xvar,
   .reflevel = NULL,
-  .control = list(fnscale = -1, maxit = 10000)
+  .control = list(fnscale = -1, maxit = 1000)
 )
 }
 \arguments{
@@ -17,7 +17,7 @@ fit_multinom_logistic_regression(
 
 \item{.group_var}{범주변수.}
 
-\item{...}{범주 분류에 사용될 변수.}
+\item{.xvar}{범주 분류에 사용될 변수.}
 
 \item{.reflevel}{기준 범주. NULL값일 때는 \code{.group_var} 범주
 레벨에서 마지막 레벨을 사용한다.}
@@ -32,7 +32,7 @@ fit_multinom_logistic_regression(
 }
 \examples{
 data(defecttype, package = "dmtr")
-fit <- fit_multinom_logistic_regression(defecttype, y, x1, x2, .reflevel = 3L,
+fit <- fit_multinom_logistic_regression(defecttype, y, c(x1, x2), .reflevel = 3L,
   .control = list(fnscale = -1, reltol = 1e-10, maxit = 100000))
 
 }

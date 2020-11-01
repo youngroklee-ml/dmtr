@@ -4,7 +4,7 @@
 \alias{fisher_ld_prediction}
 \title{피셔 선형 판별 함수 예측값.}
 \usage{
-fisher_ld_prediction(.w, .z, .newdata, ..., .levels = c(1L, 2L))
+fisher_ld_prediction(.w, .z, .newdata, .xvar, .levels = c(1L, 2L))
 }
 \arguments{
 \item{.w}{선형 함수 계수.}
@@ -13,7 +13,7 @@ fisher_ld_prediction(.w, .z, .newdata, ..., .levels = c(1L, 2L))
 
 \item{.newdata}{새 데이터.}
 
-\item{...}{범주 분류에 사용될 변수.}
+\item{.xvar}{범주 분류에 사용될 변수.}
 
 \item{.levels}{범주.}
 }
@@ -25,8 +25,8 @@ fisher_ld_prediction(.w, .z, .newdata, ..., .levels = c(1L, 2L))
 }
 \examples{
 data(binaryclass2, package = "dmtr")
-w <- fisher_ld(binaryclass2, class, x1, x2)
-z <- fisher_ld_threshold(binaryclass2, class, x1, x2)
-pred <- fisher_ld_prediction(w, z, binaryclass2, x1, x2, .levels = attr(w, "group"))
+w <- fisher_ld(binaryclass2, class, c(x1, x2))
+z <- fisher_ld_threshold(binaryclass2, class, c(x1, x2))
+pred <- fisher_ld_prediction(w, z, binaryclass2, c(x1, x2), .levels = attr(w, "group"))
 
 }

@@ -4,19 +4,19 @@
 \alias{group_nest}
 \title{범주별 데이터 프레임. Group nest.}
 \usage{
-group_nest(.data, .group_var, ...)
+group_nest(.data, .group_var, .xvar)
 }
 \arguments{
 \item{.data}{관측 데이터 프레임. A raw data frame.}
 
 \item{.group_var}{범주변수. A variable to group by.}
 
-\item{...}{범주별 데이터 프레임에 포함될 변수. One or more variables separated by commas.
+\item{.xvar}{범주별 데이터 프레임에 포함될 변수. One or more variables separated by commas within \code{c()}.
 Each variable needs to be a numeric column of \code{.data}.}
 }
 \value{
 두 개의 컬럼을 지닌 데이터 프레임으로, 첫 번째 컬럼은 범주변수 \code{.group_var}이며, 두 번째 컬럼
-  \code{new_col}는 각 범주 내의 관측객체들에 대한 데이터 프레임으로, \code{...}에 속한 변수들을 컬럼으로 지닌다.
+  \code{.new_col}는 각 범주 내의 관측객체들에 대한 데이터 프레임으로, \code{.xvar}에 속한 변수들을 컬럼으로 지닌다.
 }
 \description{
 각 범주별 데이터 분석을 위한 nested data frame을 만든다. \code{group_nest} returns nested
