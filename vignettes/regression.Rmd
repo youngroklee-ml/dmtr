@@ -123,7 +123,7 @@ Q = \sum_{i = 1}^{n} \left(y_i - \left(\beta_0 x_{i0} + \beta_1 x_{i1} + \beta_2
 \end{equation}
 
 \begin{equation}
-\frac{\partial Q}{\partial \beta_j} &=& - 2 \sum_{i = 1}^{n} x_{ij} \left(y_i - \left(\beta_0 x_{i0} + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}\right) \right), \, j = 0, \cdots, k (\#eq:multiple-linear-regression-gradient)
+\frac{\partial Q}{\partial \beta_j} = - 2 \sum_{i = 1}^{n} x_{ij} \left(y_i - \left(\beta_0 x_{i0} + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}\right) \right), \, j = 0, \cdots, k (\#eq:multiple-linear-regression-gradient)
 \end{equation}
 
 식 \@ref(eq:multiple-linear-regression-gradient)는 아래와 같이 행렬식으로 표현할 수 있다.
@@ -240,8 +240,8 @@ SSR &=& \sum_{i = 1}^{n} \left(\hat{y}_i - \bar{y}\right) ^ 2
 
 \begin{eqnarray*}
 SST &=& \sum_{i = 1}^{n} \left(y_i - \bar{y}\right) ^ 2\\
-&=& \sum_{i = 1}^{n} \left(y_i - \hat{y}_{i} +  \hat{y}_{i} - \bar{y}\right) ^ 2
-&=& \sum_{i = 1}^{n} \left(\left(y_i - \hat{y}_{i}\right) +  \left(\hat{y}_{i} - \bar{y}\right)\right) ^ 2
+&=& \sum_{i = 1}^{n} \left(y_i - \hat{y}_{i} +  \hat{y}_{i} - \bar{y}\right) ^ 2\\
+&=& \sum_{i = 1}^{n} \left(\left(y_i - \hat{y}_{i}\right) +  \left(\hat{y}_{i} - \bar{y}\right)\right) ^ 2\\
 &=& \sum_{i = 1}^{n} \left(y_i - \hat{y}_{i}\right) ^ 2 + \sum_{i = 1}^{n}  \left(\hat{y}_{i} - \bar{y}\right) ^ 2 + 2 \sum_{i = 1}^{n} \left(y_i - \hat{y}_{i}\right) \left(\hat{y}_{i} - \bar{y}\right)\\
 &=& SSE + SSR + 2 \sum_{i = 1}^{n} \left(y_i - \hat{y}_{i}\right) \left(\hat{y}_{i} - \bar{y}\right)\\
 &=& SSE + SSR
