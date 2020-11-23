@@ -14,7 +14,9 @@ fit_linear_regression(.data, .yvar, .xvar)
 \item{.xvar}{독립변수. 독립변수가 여러 개일 때는 벡터 형태로 제공한다. (e.g. \code{c(age, height)})}
 }
 \value{
-리스트. 최우추정 계수 벡터 \code{betas}. 헤시안 행렬 \code{hessian}.
+리스트. 최우추정 계수 벡터 \code{betas}, 헤시안 행렬 \code{hessian},
+        평균잔차제곱 \code{mse}, 잔차자유도 \code{df}, 전체제곱합 \code{sst},
+        결정계수 \code{rsq}, 관측치개수 \code{n}.
 }
 \description{
 주어진 데이터에 대하여 다중회귀모형을 추정한다.

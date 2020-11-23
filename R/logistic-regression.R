@@ -305,7 +305,7 @@ loglik_ordinal_logistic_regression <- function(.betas, .x, .y,
 #'   telconnection, y, c(N, L)
 #' )
 #' fit_ordinal_logistic_regression(
-#'   telconnection, y, d(N, L), .type = "adjacent"
+#'   telconnection, y, c(N, L), .type = "adjacent"
 #' )
 #'
 #' @export

@@ -21,7 +21,7 @@ fn_sum_of_squares_ols <- function(.beta, .x, .y) {
 #' @return 회귀제곱합 편미분값.
 gr_sum_of_squares_ols <- function(.beta, .x, .y) {
   beta <- matrix(.beta, ncol = 1)
-  drop(-2 * t(.x) %*% (.y - (.x %*% .beta)))
+  drop(-2 * t(.x) %*% (.y - (.x %*% beta)))
 }
 
 
@@ -32,7 +32,9 @@ gr_sum_of_squares_ols <- function(.beta, .x, .y) {
 #' @param .data 관측 데이터 프레임.
 #' @param .yvar 종속변수.
 #' @param .xvar 독립변수. 독립변수가 여러 개일 때는 벡터 형태로 제공한다. (e.g. \code{c(age, height)})
-#' @return 리스트. 최우추정 계수 벡터 \code{betas}, 헤시안 행렬 \code{hessian}, 평균잔차제곱 \code{mse}, 자유도 \code{df}.
+#' @return 리스트. 최우추정 계수 벡터 \code{betas}, 헤시안 행렬 \code{hessian},
+#'         평균잔차제곱 \code{mse}, 잔차자유도 \code{df}, 전체제곱합 \code{sst},
+#'         결정계수 \code{rsq}, 관측치개수 \code{n}.
 #'
 #' @examples
 #' data(biometric, package = "dmtr")
@@ -75,7 +77,11 @@ fit_linear_regression <- function(.data, .yvar, .xvar) {
   df <- length(y) - length(betas)
   mse <- fit$value / df
 
-  return(list(betas = betas, hessian = hessian, mse = mse, df = df))
+  sst <- sum((y - mean(y)) ^ 2)
+  rsq <- 1 - (mse * df) / sst
+
+  return(list(betas = betas, hessian = hessian, mse = mse, df = df,
+              sst = sst, rsq = rsq, n = length(y)))
 }
 
 
@@ -86,7 +92,7 @@ fit_linear_regression <- function(.data, .yvar, .xvar) {
 #' @param .fit 회귀모형 추정 결과.
 #' @param .new_data 새 관측 데이터 프레임.
 #' @param .xvar 예측에 사용될 변수.
-#' @param .interval 예측구간. 0인 경우 예측구간을 구하지 않으며, 0 과 1 사이일 경우 \code{(100 * .interval)}%의 예측구간을 구한다.
+#' @param .interval 예측구간. 0인 경우 예측구간을 구하지 않으며, 0 과 1 사이일 경우 \code{(100 * .interval)}\%의 예측구간을 구한다.
 #' @return 애측값 데이터프레임.
 #'
 #' @examples
@@ -129,3 +135,28 @@ predict_linear_regression <- function(
 }
 
 
+#' 다중선형회귀모형 분산분석표.
+#'
+#' 추정된 회귀모형을 이용하여 회귀성 검정을 위한 분산분석표를 생성한다.
+#'
+#' @param .fit 회귀모형 추정 결과.
+#' @return 분산분석표 데이터프레임.
+#'
+#' @examples
+#' data(biometric, package = "dmtr")
+#' fit <- fit_linear_regression(biometric, weight, c(age, height))
+#' anova_linear_regression(fit)
+#'
+#' @export
+anova_linear_regression <- function(.fit) {
+  dplyr::tibble(
+    source = c("회귀", "잔차", "전체"),
+    df = c(.fit$n - 1 - .fit$df, .fit$df, .fit$n - 1),
+    ss = c(.fit$sst - .fit$mse * .fit$df, .fit$mse * .fit$df, .fit$sst)
+  ) %>%
+    dplyr::mutate(
+      ms = if_else(row_number() %in% c(1, 2), ss / df, NA_real_),
+      F = if_else(row_number() == 1, ms / lead(ms), NA_real_),
+      p = 1 - pf(F, .fit$n - 1 - .fit$df, .fit$df)
+    )
+}

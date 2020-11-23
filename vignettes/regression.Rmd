@@ -24,7 +24,7 @@ library(dmtr)
 library(dplyr)
 ```
 
-# 데이터
+# 데이터 {#multiple-linear-regression-data}
 
 ```{r biometric-data-load}
 data(biometric, package = "dmtr")
@@ -40,7 +40,7 @@ knitr::kable(
 ```
 
 
-# 다중회귀모형 {#multiple-linear-regression}
+# 다중회귀모형 추정 {#multiple-linear-regression}
 
 아래와 같이 $n$개의 객체와 $k$개의 독립변수($\mathbf{x}$)로 이루어지고 하나의 종속변수($y$)로 이루어진 선형 회귀모형을 정의하자.
 
@@ -100,7 +100,7 @@ E[\boldsymbol{\epsilon}] = \mathbf{0}, \, Var[\boldsymbol{\epsilon}] = \sigma^2 
 다중회귀모형에서 회귀계수들의 추정은 최소자승법(least squares method)에 근거하고 있다. 최소화시킬 오차항의 제곱합 $Q$는 다음과 같이 표현된다.
 
 \begin{equation}
-Q = \sum_{i = 1}^{n} \left(y_i - \left(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}\right) \right) ^ 2
+Q = \sum_{i = 1}^{n} \left(y_i - \left(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}\right) \right) ^ 2 
 \end{equation}
 
 최소자승법에 의한 회귀계수의 추정은 제곱합 $Q$를 각 $\beta_j$에 대하여 편미분하고 이를 0으로 하는 다음과 같은 연립방정식을 풀어 $\hat{\beta}_j$들을 구하는 것이다.
@@ -110,8 +110,223 @@ Q = \sum_{i = 1}^{n} \left(y_i - \left(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2}
 \frac{\partial Q}{\partial \beta_j} &=& - 2 \sum_{i = 1}^{n} x_{ij} \left(y_i - \left(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}\right) \right) = 0, \, j = 1, \cdots, k
 \end{eqnarray*}
 
+여기에서
+
+\[
+x_{i0} = 1, \, i = 1, \cdots, n
+\]
+
+이라 하면, 위 오차항의 제곱합과 회귀계수에 대한 편미분식은 아래와 같이 정리할 수 있다.
+
+\begin{equation}
+Q = \sum_{i = 1}^{n} \left(y_i - \left(\beta_0 x_{i0} + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}\right) \right) ^ 2 (\#eq:multiple-linear-regression-sse)
+\end{equation}
+
+\begin{equation}
+\frac{\partial Q}{\partial \beta_j} &=& - 2 \sum_{i = 1}^{n} x_{ij} \left(y_i - \left(\beta_0 x_{i0} + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}\right) \right), \, j = 0, \cdots, k (\#eq:multiple-linear-regression-gradient)
+\end{equation}
+
+식 \@ref(eq:multiple-linear-regression-gradient)는 아래와 같이 행렬식으로 표현할 수 있다.
+
+\[
+\mathbf{X}^\top \left( \mathbf{y} - \mathbf{X}\mathbf{\beta} \right)
+\]
+
+이를 다시 정리하면 아래와 같이 회귀계수를 추정할 수 있다.
+
+\begin{eqnarray*}
+- 2 \mathbf{X}^\top \left( \mathbf{y} - \mathbf{X}\hat{\mathbf{\beta}} \right) &=& 0\\
+\mathbf{X}^\top \mathbf{y} &=& \mathbf{X}^\top \mathbf{X} \hat{\mathbf{\beta}}\\
+\left(\mathbf{X}^\top \mathbf{X}\right) ^ {-1} \mathbf{X}^\top \mathbf{y} &=& \left(\mathbf{X}^\top \mathbf{X}\right) ^ {-1} \left(\mathbf{X}^\top \mathbf{X}\right) \hat{\mathbf{\beta}}\\
+&=& \hat{\mathbf{\beta}}
+\end{eqnarray*}
+
+행렬식을 이용하여, 주어진 예제 데이터에서 나이와 키로써 몸부게를 설명하는 회귀모형을 추정해보자.
 
 ```{r}
+y <- biometric %>% 
+  pull(weight)
 
+X <- biometric %>% 
+  select(age, height) %>%
+  mutate(`(Intercept)` = 1, .before = 1L) %>%
+  as.matrix()
+
+beta_hat <- solve(t(X) %*% X) %*% t(X) %*% y
+
+print(beta_hat)
 ```
+
+
+추정된 회귀계수에서 각 편미분값이 0을 확인해보자. 
+
+```{r}
+t(X) %*% (y - X %*% beta_hat)
+```
+
+실제 얻어진 값은 정확히 0은 아니지만 0에 매우 근접하며, 정확히 0이 얻어지지 않는 이유는 컴퓨팅 측면의 문제로 볼 수 있다 (알고리즘, 소수점 표현 구조 등). 이러한 경우 `dplyr::near()` 함수를 이용하여 수치가 목표 수치에 충분히 근접하여 있는지를 확인할 수 있으며, 위 회귀계수 편미분값의 경우 모두 0에 충분히 근접함을 확인할 수 있다.
+
+```{r}
+near(t(X) %*% (y - X %*% beta_hat), 0)
+```
+
+
+위와 같은 회귀계수 추정과정을 함수 `fit_linear_regression()`으로 구현하였으며, 결과 리스트값에서 `betas` 원소가 추정된 회귀계수를 나타낸다.
+
+```{r}
+fit <- fit_linear_regression(biometric, weight, c(age, height))
+fit$betas
+```
+
+
+위 추정된 회귀계수를 식 \@ref(eq:multiple-linear-regression-sse)에 대입하여 잔차제곱합(residual sum of squareds; $SSE$)을 계산해보자.
+
+```{r}
+sse <- sum((y - (X %*% fit$beta)) ^ 2)
+sse
+```
+
+이 때, 식 \@ref(eq:multiple-linear-regression)의 오차항 $\epsilon_i$의 분산 $\sigma ^ 2$의 추정은 위 잔차제곱합을 자유도 $(n - k - 1)$로 나눈 잔차평균제곱합(mean sequared error; $MSE$)을 이용한다.
+
+\[
+\hat{\sigma} ^ 2 = MSE = \frac{SSE}{n - k - 1}
+\]
+
+```{r}
+mse <- sse / (nrow(X) - ncol(X))
+mse
+```
+
+
+함수 `fit_linear_regression()`의 결과 리스트값에서 `mse` 원소가 잔차평균제곱값을 나타내며, `df` 원소가 자유도 $(n - k - 1)$을 나타낸다.
+
+```{r}
+fit$mse
+```
+
+```{r}
+fit$df
+```
+
+따라서, 이 두 결과값을 이용하여 잔차제곱합을 역으로 계산할 수 있다.
+
+```{r}
+fit$mse * fit$df
+```
+
+
+
+# 모형에 따른 추론 {#multiple-linear-regression-inference}
+
+## 회귀성 검정
+
+다중회귀모형에 있어서 유의성 검정, 즉 회귀성 검정은 독립변수의 기울기에 해당하는 모든 회귀계수($\beta_0$은 제외)가 0의 값을 갖는가 또는 그렇지 않은가를 검정하는 것이다. 귀무가설과 대립가설은 아래와 같다.
+
+\begin{eqnarray*}
+H_0 &:& \beta_1 = \beta_2 = \cdots = \beta_k = 0\\
+H_1 &:& \beta_j \neq 0 \, \text{for at least one} \, j \in \{1, 2, \cdots, k\}
+\end{eqnarray*}
+
+독립변수의 기울기에 해당하는 회귀계수 중 적어도 하나가 0이 아니라고 판단되면 귀무가설이 기각되고 회귀성이 있다고 말하게 된다.
+
+회귀성 검정을 위해, 앞 절에서 살펴본 잔차제곱합이며 $SSE$ 외에, 전체제곱합(total sum of squares; $SST$)와 회귀제곱합(regression sum of squares; $SSR$)을 아래와 같이 정의한다.
+
+\begin{eqnarray*}
+SST &=& \sum_{i = 1}^{n} \left(y_i - \bar{y}\right) ^ 2\\
+SSR &=& \sum_{i = 1}^{n} \left(\hat{y}_i - \bar{y}\right) ^ 2
+\end{eqnarray*}
+
+이 때, $\bar{y} = \frac{1}{n} \sum_{i = 1}^{n} y_i$는 관측치 $y_i$의 평균을 나타낸다. $SST$, $SSR$, 그리고 $SSE$는 아래와 같은 관계를 지닌다.
+
+\begin{eqnarray*}
+SST &=& \sum_{i = 1}^{n} \left(y_i - \bar{y}\right) ^ 2\\
+&=& \sum_{i = 1}^{n} \left(y_i - \hat{y}_{i} +  \hat{y}_{i} - \bar{y}\right) ^ 2
+&=& \sum_{i = 1}^{n} \left(\left(y_i - \hat{y}_{i}\right) +  \left(\hat{y}_{i} - \bar{y}\right)\right) ^ 2
+&=& \sum_{i = 1}^{n} \left(y_i - \hat{y}_{i}\right) ^ 2 + \sum_{i = 1}^{n}  \left(\hat{y}_{i} - \bar{y}\right) ^ 2 + 2 \sum_{i = 1}^{n} \left(y_i - \hat{y}_{i}\right) \left(\hat{y}_{i} - \bar{y}\right)\\
+&=& SSE + SSR + 2 \sum_{i = 1}^{n} \left(y_i - \hat{y}_{i}\right) \left(\hat{y}_{i} - \bar{y}\right)\\
+&=& SSE + SSR
+\end{eqnarray*}
+
+여기에서 회귀제곱합 $SSR$을 자유도 $k$로 나눈 값을 아래와 같이 회귀평균제곱($MSR$)으로 아래와 같이 정의하고,
+
+\begin{equation}
+MSR = \frac{SSR}{k}
+\end{equation}
+
+검정통계량으로 다음과 같은 $F$-값을 이용한다.
+
+\begin{equation}
+F_0 = \frac{MSR}{MSE}
+\end{equation}
+
+회귀성 검정의 귀무가설이 옳을 경우, 즉 모든 독립변수의 기울기에 해당하는 회귀계수가 0일 경우, 검정통계량 $F_0$는 다음과 같은 F-분포를 따른다. 
+
+\begin{equation}
+F_0 \sim F_{(k, n - k - 1)}, \, \text{if } \beta_1 = \beta_2 = \cdots = \beta_k = 0
+\end{equation}
+
+따라서, 다음과 같을 때 유의수준 $\alpha$에서 가설 $H_0$을 기각한다.
+
+\[
+F_0 > F_{(\alpha, k, n - k - 1)}
+\]
+
+위 예제 데이터에서 추정된 회귀모형에 대해 회귀성 검정을 수행해보자.
+
+```{r}
+sst <- sum((y - mean(y)) ^ 2)
+ssr <- sst - fit$mse * fit$df
+msr <- ssr / (ncol(X) - 1)
+f0 <- msr / fit$mse
+alpha <- 0.05
+f_alpha <- qf(1 - alpha, (ncol(X) - 1), fit$df)
+f0 > f_alpha
+```
+
+위 결과에서 귀무가설은 기각되며, 유의수준 `r alpha`에서 유의한 모형이라 할 수 있다. 위 결과를 함수 `anova_linear_regression()`을 이용하여 분산분석표로 나타낼 수 있다.
+
+```{r}
+anova_linear_regression(fit)
+```
+
+
+
+
+
+# 모형 성능 척도
+
+고려하고 있는 회귀모형 또는 추정된 회귀식이 얼마나 데이터를 잘 반영하고 있는가를 알아본다. 
+
+
+
+이를 이용하여 회귀모형의 결정계수(coefficient of determination) $R ^ 2$를 아래와 같이 정의한다.
+
+\[
+R ^ 2 = \frac{SSR}{SST} = 1 - \frac{SSE}{SST}
+\]
+
+즉, $R ^ 2$값은 전체제곱합 중 모형이 설명하는 제곱합의 비율로 해석되며, 0에서 1 사이의 값을 갖는다. 위 예제 데이터에서 추정된 회귀모형의 결정계수 값을 계산해보자.
+
+```{r}
+sst <- sum((y - mean(y)) ^ 2)
+1 - (fit$mse * fit$df) / sst
+```
+
+이 식에서, $SSE$는 독립변수의 개수가 증가함에 따라 감소하는 속성을 지니며, $SST$는 독립변수의 개수와 상관없이 일정하므로, $R ^ 2$는 독립변수 개수가 증가함에 따라 증가하는 속성을 지닌다. $R ^ 2$에 기반한 모형 평가는 종종 과적합(overfitting)의 문제를 수반하므로, 독립변수 개수에 따른 $R ^ 2$의 증가분에 대한 조정을 적용하는 수정결정계수(adjusted coefficient of determination) $R_{adj} ^ 2$가 아래와 같이 정의된다.
+
+\[
+R_{adj} ^ 2 = 1 - \frac{SSE / (n - k - 1)}{SST / (n - 1)}
+\]
+
+여기에서 분자 $SSE / (n - k - 1)$은 앞 절에서 살펴본 잔차평균제곱합 $MSE$ 이며, 분모는 $SST$를 그 자유도 $n - 1$으로 나눈 값이다.
+
+
+```{r}
+1 - fit$mse / (sst / (length(y) - 1))
+```
+
+
+
+
+
 
