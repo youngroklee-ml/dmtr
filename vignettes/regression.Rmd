@@ -290,16 +290,101 @@ anova_linear_regression(fit)
 ```
 
 
+## 개별 회귀계수에 대한 검정
+
+회귀계수벡터 $\boldsymbol{\beta}$의 추정량은 다음과 같은 기대치와 분산-공분산행렬을 갖는 다변량 정규분포를 따른다.
+
+\begin{eqnarray*}
+E\left[\hat{\boldsymbol{\beta}}\right] &=& \boldsymbol{\beta}\\
+Var\left[\hat{\boldsymbol{\beta}}\right] &=& \sigma^2 \left(\mathbf{X}^\top \mathbf{X}\right)^{-1}
+\end{eqnarray*}
+
+위 예제 데이터에 대하여 회귀계수벡터 추정량의 분산-공분산행렬을 구해보자.
+
+```{r}
+fit$mse * solve(t(X) %*% X)
+```
+
+함수 `fit_linear_regression()`의 결과 리스트값에서 `hessian` 원소는 $2 \mathbf{X}^\top \mathbf{X}$ 값을 지니며, 따라서 `hessian` 원소를 2로 나누어 $\mathbf{X}^\top \mathbf{X}$에 대입할 때 위와 동일한 분산-공분산행렬을 보인다. 
+
+```{r}
+fit$mse * solve(fit$hessian / 2)
+```
+
+참고로, `hessian` 행렬은 식 \@ref(eq:multiple-linear-regression-sse)의 오차항 제곱합 $Q$를 최적화하는 과정에서 얻어지며, 오차항 제곱합 $Q$의 식을 변형하면 `hessian` 행렬 또한 달라진다. 예를 들어, $Q$ 대신 $\frac{1}{2}Q$를 최적화하게 되면, 최적해 $\hat{\boldsymbol{\beta}}$는 동일하나 `hessian` 행렬은 $2 \mathbf{X}^\top \mathbf{X}$가 아닌 $\mathbf{X}^\top \mathbf{X}$로 얻어진다.
+
+
+위 분산-공분산행렬에서 대각원소들은 각 회귀계수의 분산을 나타내며, 따라서 각 대각원소의 제곱근이 각 회귀계수의 표준오차(standard error; $se\left(\hat{\beta}_j\right)$)를 나타낸다.
+
+```{r}
+sqrt(diag(fit$mse * solve(fit$hessian / 2)))
+```
+
+이 표본오차는 `fit_linear_regression()`의 결과 리스트의 `se` 원소에 저장되어 있다.
+
+```{r}
+fit$se
+```
+
+
+이 때, $\hat{\beta}_j$의 분포는 다음과 같다.
+
+\[
+\frac{\hat{\beta}_j - \beta_j}{se\left(\hat{\beta}_j\right)} \sim t_{(n - k - 1)}
+\]
+
+그러므로 $\beta_j$에 대한 $100(1 - \alpha)\%$ 신뢰구간은 아래와 같다.
+
+\[
+\hat{\beta}_j \pm se\left(\hat{\beta}_j\right)t_{(\alpha/2, \, n - k - 1)}
+\]
+
+각각의 회귀계수($\beta_0$ 포함)가 0의 값을 갖는가 또는 그렇지 않은가를 검정하기 위한 귀무가설과 대립가설은 아래와 같다.
+
+\begin{eqnarray*}
+H_0 &:& \beta_j = 0\\
+H_1 &:& \beta_j \neq 0
+\end{eqnarray*}
+
+위 검정을 위해 검정통계량 $t$-값을 이용한다.
+
+\[
+T_j = \frac{\hat{\beta}_j}{se\left(\hat{\beta}_j\right)}
+\]
+
+위 통계량은 $\beta_j = 0$일 때 $t_{(n - k - 1)}$ 분포를 따르기 때문에, 유의수준 $0 < \alpha < 1$에서
+
+\[
+\left| T_j \right| > t_{(2 / \alpha, \, n - k - 1)}
+\]
+
+이면 귀무가설 $H_0$를 기각하게 된다.
+
+위 예제 데이터에서 추정된 회귀모형의 회귀계수 각각에 대해 검정을 수행해보자.
+
+```{r}
+alpha <- 0.05
+t_stat <- fit$betas / fit$se
+t_alpha <- qt(1 - alpha / 2, fit$df)
+abs(t_stat) > t_alpha
+```
+
+위 결과에서 모든 각각의 회귀계수에 대해 귀무가설은 기각되며, 유의수준 `r alpha`에서 각 독립변수는 종속변수인 몸무게에 유의한 변수라는 것을 의미한다. 위 결과를 함수 `ttest_linear_regression()`을 이용하여 데이터 프레임으로 나타낼 수 있다.
+
+```{r}
+ttest_linear_regression(fit)
+```
 
 
 
-# 모형 성능 척도
+# 변수 선택
 
-고려하고 있는 회귀모형 또는 추정된 회귀식이 얼마나 데이터를 잘 반영하고 있는가를 알아본다. 
+종속변수를 설명하기 위한 독립변수들의 후보가 매우 많은 경우, 어떤 독립변수들의 조합에 의한 회귀모형이 가장 좋은가를 판단한다.
 
 
+## 모형 성능 척도
 
-이를 이용하여 회귀모형의 결정계수(coefficient of determination) $R ^ 2$를 아래와 같이 정의한다.
+고려하고 있는 회귀모형 또는 추정된 회귀식이 얼마나 데이터를 잘 반영하고 있는가를 알기 위해, 회귀모형의 결정계수(coefficient of determination) $R ^ 2$를 아래와 같이 정의한다.
 
 \[
 R ^ 2 = \frac{SSR}{SST} = 1 - \frac{SSE}{SST}
@@ -325,8 +410,90 @@ R_{adj} ^ 2 = 1 - \frac{SSE / (n - k - 1)}{SST / (n - 1)}
 1 - fit$mse / (sst / (length(y) - 1))
 ```
 
+위 결정계수 $R ^ 2$ 및 수정결정계수 $R_{adj} ^ 2$는 아래와 같이 `fit_linear_regression()` 결과 리스트의 `rsq` 및 `rsqadj` 원소에 각각 저장된다.
+
+```{r}
+print(fit$rsq)
+print(fit$rsqadj)
+```
 
 
+부가적인 모형의 성능척도로, 맬로우즈(Mallows)가 개발한 $C_p$ 통계량이 종종 사용된다. 이는 $p$항 회귀모형이 완전모형에 얼마나 가까운지를 나타내는 척도로서, 다음과 같이 정의된다.
+
+\[
+C_p = \frac{SSE_p}{MSE} - n + 2p
+\]
+
+여기에서 $MSE$는 $k + 1$개의 회귀계수(($k$개의 기울기 계수와 1개의 절편)를 이용한 완전모형에서 얻어지는 $\sigma^2$의 추정량이며, $SSE_p$는 $(p - 1)$개의 독립변수에 대한 회귀계수와 1개의 절편으로 이루어진 모형을 추정할 때 얻어지는 잔차제곱합이다 ($p - 1 < k$). 
+
+예를 들어, 위 예제 데이터에서 나이를 제외하고 키 하나의 변수만을 이용하여 몸무게를 설명하는 회귀모형을 아래와 같이 추정해보자.
+
+```{r}
+fit_reduced <- fit_linear_regression(biometric, weight, height)
+```
+
+이 때, $C_p$값은 아래와 같이 얻어진다.
+
+```{r}
+(fit_reduced$mse * fit_reduced$df) / fit$mse - 
+  fit_reduced$n + 2 * (fit_reduced$n - fit_reduced$df)
+```
+
+
+참고로, $C_p$는 다음과 같은 예측치 평균오차제곱의 추정량이다.
+
+\[
+\Gamma_p = \frac{1}{\sigma^2} \sum_{i = i}^{n} E\left[\left(\hat{y}_i - E\left[y_i\right]\right)^2\right]
+\]
+
+완전모형($p = k + 1$)에 대한 $C_p$값은 $k + 1 = p$이다. 또한, $p$항 회귀모형이 완전모형에 비해 편의(bias)가 없다면, $C_p$의 기대값은 $p$가 된다.
+
+\begin{eqnarray*}
+E\left[C_p \, | \, bias = 0\right] &\approx& \frac{E\left[SSE_p \, | \, bias = 0\right]}{\sigma^2} - n + 2p\\
+&=& \frac{(n - p)\sigma^2}{\sigma^2} - n + 2p\\
+&=& p
+\end{eqnarray*}
+
+$C_p$값이 $p$에 가까울수록 편의가 적은 모형이며, 편의가 적은 모형인 동시에 변수의 수가 적은 모형이 가장 적절한 모형이라 할 수 있다.
+
+
+## 모든 가능한 조합의 회귀분석
+
+이 방법은 모든 가능한 독립변수들의 조합에 대한 회귀모형을 분석하여 가장 적합한 회귀모형을 선택하는 방법이다.
+
+
+```{r}
+variables <- c("age", "height")
+variables_in_model <- vector("list", length = length(variables))
+for(i in seq(from = 0L, to = length(variables))) {
+  variables_in_model[[i + 1L]] <- combn(variables, i, simplify = FALSE)
+}
+
+variables_in_model <- unlist(variables_in_model, recursive = FALSE)
+fit_reduced <- purrr::map(
+  variables_in_model,
+  ~ fit_linear_regression(biometric, weight, .x)
+)
+
+purrr::map_dfr(
+  fit_reduced,
+  ~ tibble(
+    p = length(.x$betas),
+    rsq = .x$rsq,
+    rsqadj = .x$rsqadj,
+    cp = mallows_c(.x, fit),
+    mse = .x$mse,
+    terms = paste(names(.x$betas), collapse = ", ")
+  )
+)
+
+```
+
+위 과정은 함수 `evaluate_linear_regression()`에 구현되어 있다.
+
+```{r}
+evaluate_linear_regression(biometric, weight, c(age, height))
+```
 
 
 

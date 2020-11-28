@@ -15,8 +15,8 @@ fit_linear_regression(.data, .yvar, .xvar)
 }
 \value{
 리스트. 최우추정 계수 벡터 \code{betas}, 헤시안 행렬 \code{hessian},
-        평균잔차제곱 \code{mse}, 잔차자유도 \code{df}, 전체제곱합 \code{sst},
-        결정계수 \code{rsq}, 관측치개수 \code{n}.
+        평균잔차제곱 \code{mse}, 잔차자유도 \code{df}, 회귀계수 표준오차 \code{se},
+        전체제곱합 \code{sst}, 결정계수 \code{rsq}, 수정결졍계수 \code{rsqadj}, 관측치개수 \code{n}.
 }
 \description{
 주어진 데이터에 대하여 다중회귀모형을 추정한다.

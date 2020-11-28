@@ -33,8 +33,8 @@ gr_sum_of_squares_ols <- function(.beta, .x, .y) {
 #' @param .yvar 종속변수.
 #' @param .xvar 독립변수. 독립변수가 여러 개일 때는 벡터 형태로 제공한다. (e.g. \code{c(age, height)})
 #' @return 리스트. 최우추정 계수 벡터 \code{betas}, 헤시안 행렬 \code{hessian},
-#'         평균잔차제곱 \code{mse}, 잔차자유도 \code{df}, 전체제곱합 \code{sst},
-#'         결정계수 \code{rsq}, 관측치개수 \code{n}.
+#'         평균잔차제곱 \code{mse}, 잔차자유도 \code{df}, 회귀계수 표준오차 \code{se},
+#'         전체제곱합 \code{sst}, 결정계수 \code{rsq}, 수정결졍계수 \code{rsqadj}, 관측치개수 \code{n}.
 #'
 #' @examples
 #' data(biometric, package = "dmtr")
@@ -77,11 +77,14 @@ fit_linear_regression <- function(.data, .yvar, .xvar) {
   df <- length(y) - length(betas)
   mse <- fit$value / df
 
+  se <- sqrt(diag(mse * solve(hessian / 2)))
+
   sst <- sum((y - mean(y)) ^ 2)
   rsq <- 1 - (mse * df) / sst
+  rsqadj <- 1 - (length(y) - 1) / df * (1 - rsq)
 
-  return(list(betas = betas, hessian = hessian, mse = mse, df = df,
-              sst = sst, rsq = rsq, n = length(y)))
+  return(list(betas = betas, hessian = hessian, mse = mse, df = df, se = se,
+              sst = sst, rsq = rsq, rsqadj = rsqadj, n = length(y)))
 }
 
 
@@ -160,3 +163,95 @@ anova_linear_regression <- function(.fit) {
       p = 1 - pf(F, .fit$n - 1 - .fit$df, .fit$df)
     )
 }
+
+
+#' 다중선형회귀모형 회귀계수 검정.
+#'
+#' 추정된 회귀모형을 이용하여 각 회귀계수의 유의성을 검정한다.
+#'
+#' @param .fit 회귀모형 추정 결과.
+#' @return 회귀계수 검정 데이터프레임.
+#'
+#' @examples
+#' data(biometric, package = "dmtr")
+#' fit <- fit_linear_regression(biometric, weight, c(age, height))
+#' ttest_linear_regression(fit)
+#'
+#' @export
+ttest_linear_regression <- function(.fit) {
+  dplyr::tibble(
+    term = names(.fit$betas),
+    estimate = .fit$betas,
+    std_error = .fit$se,
+    statistic = estimate / std_error,
+    p_value = pt( - abs(statistic), .fit$df) * 2
+  )
+}
+
+
+#' 맬로우즈 Cp 통계량
+#'
+#' 맬로우즈 Cp 통계량을 계산한다.
+#'
+#' @param .fit_reduced $p$항 회귀모형 추정 결과.
+#' @param .fit_full 완전모형 추정 결과.
+#' @return 맬로우즈 Cp 통계량.
+#'
+#' @examples
+#' data(biometric, package = "dmtr")
+#' fit_full <- fit_linear_regression(biometric, weight, c(age, height))
+#' fit_reduced <- fit_linear_regression(biometric, weight, height)
+#' mallows_c(fit_reduced, fit_full)
+#'
+#' @export
+mallows_c <- function(.fit_reduced, .fit_full) {
+  (.fit_reduced$mse * .fit_reduced$df) / .fit_full$mse -
+    .fit_reduced$n + 2 * (.fit_reduced$n - .fit_reduced$df)
+}
+
+
+#' 다중회귀모형 선택척도 산출
+#'
+#' 회귀모형의 각 변수조합에 대한 선택척도를 산출한다.
+#'
+#' @param .data 관측 데이터 프레임.
+#' @param .yvar 종속변수.
+#' @param .xvar 완전모형에 속할 독립변수. 독립변수가 여러 개일 때는 벡터 형태로 제공한다. (e.g. \code{c(age, height)})
+#' @return \code{.xvar}의 각 변수조합에 대한 선택척도 데이터프레임.
+#'
+#' @examples
+#' data(biometric, package = "dmtr")
+#' evaluate_linear_regression(biometric, weight, c(age, height))
+#'
+#' @export
+evaluate_linear_regression <- function(.data, .yvar, .xvar) {
+  variables <- tidyselect::eval_select(rlang::enquo(.xvar), .data) %>% names()
+
+  variables_in_model <- purrr::map(
+    seq(from = 0L, to = length(variables)),
+    ~ combn(variables, .x, simplify = FALSE)
+  )
+  variables_in_model <- unlist(variables_in_model, recursive = FALSE)
+
+  fit_reduced <- purrr::map(
+    variables_in_model,
+    ~ fit_linear_regression(biometric, weight, .x)
+  )
+
+  fit_full <- fit_reduced[[length(fit_reduced)]]
+
+  res <- purrr::map_dfr(
+    fit_reduced,
+    ~ tibble(
+      p = length(.x$betas),
+      rsq = .x$rsq,
+      rsqadj = .x$rsqadj,
+      cp = mallows_c(.x, fit_full),
+      mse = .x$mse,
+      terms = paste(names(.x$betas), collapse = ", ")
+    )
+  )
+
+  return(res)
+}
+
