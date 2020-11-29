@@ -159,8 +159,8 @@ anova_linear_regression <- function(.fit) {
   ) %>%
     dplyr::mutate(
       ms = if_else(row_number() %in% c(1, 2), ss / df, NA_real_),
-      F = if_else(row_number() == 1, ms / lead(ms), NA_real_),
-      p = 1 - pf(F, .fit$n - 1 - .fit$df, .fit$df)
+      F_statistic = if_else(row_number() == 1, ms / lead(ms), NA_real_),
+      p_value = 1 - stats::pf(F_statistic, .fit$n - 1 - .fit$df, .fit$df)
     )
 }
 
@@ -183,8 +183,8 @@ ttest_linear_regression <- function(.fit) {
     term = names(.fit$betas),
     estimate = .fit$betas,
     std_error = .fit$se,
-    statistic = estimate / std_error,
-    p_value = pt( - abs(statistic), .fit$df) * 2
+    t_statistic = estimate / std_error,
+    p_value = stats::pt( - abs(t_statistic), .fit$df) * 2
   )
 }
 
@@ -226,6 +226,7 @@ mallows_c <- function(.fit_reduced, .fit_full) {
 #' @export
 evaluate_linear_regression <- function(.data, .yvar, .xvar) {
   variables <- tidyselect::eval_select(rlang::enquo(.xvar), .data) %>% names()
+  .yvar <- rlang::enquo(.yvar)
 
   variables_in_model <- purrr::map(
     seq(from = 0L, to = length(variables)),
@@ -235,14 +236,14 @@ evaluate_linear_regression <- function(.data, .yvar, .xvar) {
 
   fit_reduced <- purrr::map(
     variables_in_model,
-    ~ fit_linear_regression(biometric, weight, .x)
+    ~ fit_linear_regression(.data, !!.yvar, dplyr::all_of(.x))
   )
 
   fit_full <- fit_reduced[[length(fit_reduced)]]
 
   res <- purrr::map_dfr(
     fit_reduced,
-    ~ tibble(
+    ~ dplyr::tibble(
       p = length(.x$betas),
       rsq = .x$rsq,
       rsqadj = .x$rsqadj,
@@ -255,3 +256,47 @@ evaluate_linear_regression <- function(.data, .yvar, .xvar) {
   return(res)
 }
 
+
+#' 다중회귀모형 Type II 제곱합을 이용한 F 검정
+#'
+#' 회귀모형의 각 변수에 대해 Type II 제곱합을 산출하고 F 검정을 수행한다.
+#'
+#' @param .data 관측 데이터 프레임.
+#' @param .yvar 종속변수.
+#' @param .xvar 완전모형에 속할 독립변수. 독립변수가 여러 개일 때는 벡터 형태로 제공한다. (e.g. \code{c(age, height)})
+#' @return \code{.xvar}의 각 변수에 대한 검정 결과 데이터프레임.
+#'
+#' @examples
+#' data(biometric, package = "dmtr")
+#' test_type2_linear_regression(biometric, weight, c(age, height))
+#'
+#' @export
+test_type2_linear_regression <- function(.data, .yvar, .xvar) {
+  .xvar <- rlang::enquo(.xvar)
+  .yvar <- rlang::enquo(.yvar)
+
+  variables <- tidyselect::eval_select(.xvar, .data) %>% names()
+
+  fit_full <- fit_linear_regression(.data, !!.yvar, !!.xvar)
+  ssr_full <- fit_full$sst * fit_full$rsq
+  mse_full <- fit_full$mse
+  df_full <- fit_full$df
+
+  fit_reduced <- purrr::map(
+    variables,
+    ~ fit_linear_regression(.data, !!.yvar, setdiff(variables, .x))
+  )
+
+  res <- purrr::map2_dfr(
+    variables,
+    fit_reduced,
+    ~ dplyr::tibble(
+      terms = .x,
+      ss = ssr_full - .y$sst * .y$rsq,
+      F_statistic = ss / mse_full,
+      p_value = 1 - stats::pf(F_statistic, 1, df_full)
+    )
+  )
+
+  return(res)
+}
