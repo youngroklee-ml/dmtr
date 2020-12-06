@@ -264,6 +264,7 @@ evaluate_linear_regression <- function(.data, .yvar, .xvar) {
 #' @param .data 관측 데이터 프레임.
 #' @param .yvar 종속변수.
 #' @param .xvar 완전모형에 속할 독립변수. 독립변수가 여러 개일 때는 벡터 형태로 제공한다. (e.g. \code{c(age, height)})
+#' @param .last_only .xvar 중 가장 마지막 변수에 대해서만 검정을 수행할 것인지 여부. Default: \code{FALSE}
 #' @return \code{.xvar}의 각 변수에 대한 검정 결과 데이터프레임.
 #'
 #' @examples
@@ -271,24 +272,29 @@ evaluate_linear_regression <- function(.data, .yvar, .xvar) {
 #' test_type2_linear_regression(biometric, weight, c(age, height))
 #'
 #' @export
-test_type2_linear_regression <- function(.data, .yvar, .xvar) {
+test_type2_linear_regression <- function(.data, .yvar, .xvar, .last_only = FALSE) {
   .xvar <- rlang::enquo(.xvar)
   .yvar <- rlang::enquo(.yvar)
-
-  variables <- tidyselect::eval_select(.xvar, .data) %>% names()
 
   fit_full <- fit_linear_regression(.data, !!.yvar, !!.xvar)
   ssr_full <- fit_full$sst * fit_full$rsq
   mse_full <- fit_full$mse
   df_full <- fit_full$df
 
+  variables <- tidyselect::eval_select(.xvar, .data) %>% names()
+  if (.last_only) {
+    candidates <- variables[length(variables)]
+  } else {
+    candidates <- variables
+  }
+
   fit_reduced <- purrr::map(
-    variables,
+    candidates,
     ~ fit_linear_regression(.data, !!.yvar, setdiff(variables, .x))
   )
 
   res <- purrr::map2_dfr(
-    variables,
+    candidates,
     fit_reduced,
     ~ dplyr::tibble(
       terms = .x,
@@ -299,4 +305,123 @@ test_type2_linear_regression <- function(.data, .yvar, .xvar) {
   )
 
   return(res)
+}
+
+
+#' 다중회귀모형 단계적 선택방법을 통한 회귀모형 입력변수 선택
+#'
+#' 단계적 선택방법을 통해 독립변수를 선택한다.
+#'
+#' @param .data 관측 데이터 프레임.
+#' @param .yvar 종속변수.
+#' @param .xvar 완전모형에 속할 독립변수. 독립변수가 여러 개일 때는 벡터 형태로 제공한다. (e.g. \code{c(age, height)})
+#' @param .alpha_in 변수 선택 단계에서 적용할 유의수준. Default: 0.05
+#' @param .alpha_out 변수 제거 단계에서 적용할 유의수준. \code{.alpha_in} 보다 크거나 같아야 한다. Default: 0.10
+#' @param .verbose 각 단계의 선택/제거 변수를 화면에 출력할 지 여부. Default: \code{TRUE}
+#' @return 최종 선택된 독립변수 이름 벡터.
+#'
+#' @examples
+#' data(biometric, package = "dmtr")
+#' select_variables_stepwise(biometric, weight, c(age, height))
+#'
+#' @export
+select_variables_stepwise <- function(.data, .yvar, .xvar,
+                             .alpha_in = 0.05, .alpha_out = 0.10, .maxit = 100L,
+                             .verbose = TRUE) {
+  if (.alpha_in > .alpha_out) {
+    stop(".alpha_in must be less than or equal to .alpha_out")
+  }
+
+  .xvar <- rlang::enquo(.xvar)
+  .yvar <- rlang::enquo(.yvar)
+  variables <- tidyselect::eval_select(.xvar, .data) %>% names()
+
+  res_addition <- purrr::map_dfr(
+    variables,
+    ~ test_type2_linear_regression(.data, !!.yvar, .x)
+  ) %>%
+    dplyr::slice_max(ss, n = 1L, with_ties = FALSE) %>%
+    dplyr::filter(p_value < .alpha_in)
+
+  if (nrow(res_addition) == 0L) {
+    cat("No variable gives statistically significant improvement of the fit.\n")
+    return(as.character())
+  }
+
+  if (.verbose) {
+    cat(
+      "Inital variable: ",
+      res_addition[["terms"]],
+      ", p-value = ",
+      res_addition[["p_value"]],
+      " < ",
+      .alpha_in,
+      "\n"
+    )
+  }
+
+  variables_in_model <- res_addition[["terms"]]
+
+  for (i in seq_len(.maxit)) {
+    variables_not_in_model <- setdiff(variables, variables_in_model)
+
+    if (.verbose) {
+      cat("Iteration ", i, ": forward selection - ")
+    }
+
+    res_addition <- purrr::map_dfr(
+      variables_not_in_model,
+      ~ test_type2_linear_regression(.data, !!.yvar, c(variables_in_model, .x),
+                                     .last_only = TRUE)
+    ) %>%
+      dplyr::slice_max(ss, n = 1L, with_ties = FALSE) %>%
+      dplyr::filter(p_value < .alpha_in)
+
+    if (nrow(res_addition) == 0) {
+      if (.verbose) {
+        cat("no additional variable gives statistically significant improvement of the fit.\n")
+      }
+      return(variables_in_model)
+    }
+
+    if (.verbose) {
+      cat(res_addition[["terms"]], ", p-value = ", res_addition[["p_value"]], " < ", .alpha_in, "\n")
+    }
+
+    variables_in_model <- c(variables_in_model, res_addition[["terms"]])
+    variables_not_in_model <- setdiff(variables_not_in_model, res_addition[["terms"]])
+
+    if (.verbose) {
+      cat("Iteration ", i, ": backward elimination - ")
+    }
+
+    res_elimination <- test_type2_linear_regression(.data, !!.yvar, variables_in_model) %>%
+      dplyr::slice_min(ss, n = 1L, with_ties = FALSE) %>%
+      dplyr::filter(p_value > .alpha_out)
+
+    if (nrow(res_elimination) == 0) {
+      if (.verbose) {
+        cat("no variable can be deleted without a statistically significant loss of fit.\n")
+      }
+    } else {
+      if (.verbose) {
+        cat(res_elimination[["terms"]], ", p-value = ", res_elimination[["p_value"]], " > ", .alpha_out, "\n")
+      }
+
+      variables_in_model <- setdiff(variables_in_model, res_elimination[["terms"]])
+      variables_not_in_model <- c(variables_not_in_model, res_elimination[["terms"]])
+    }
+
+    if (rlang::is_empty(variables_not_in_model)) {
+      if (.verbose) {
+        cat("Every variable provides statistically significant improvement of fit.\n")
+      }
+      return(variables_in_model)
+    } else if (i == .maxit) {
+      warning("Reached to maximum number of iterations. Please consider increasing a value of .maxit.\n")
+      return(variables_in_model)
+    }
+
+  }
+
 }

@@ -4,7 +4,7 @@
 \alias{test_type2_linear_regression}
 \title{다중회귀모형 Type II 제곱합을 이용한 F 검정}
 \usage{
-test_type2_linear_regression(.data, .yvar, .xvar)
+test_type2_linear_regression(.data, .yvar, .xvar, .last_only = FALSE)
 }
 \arguments{
 \item{.data}{관측 데이터 프레임.}
@@ -12,6 +12,8 @@ test_type2_linear_regression(.data, .yvar, .xvar)
 \item{.yvar}{종속변수.}
 
 \item{.xvar}{완전모형에 속할 독립변수. 독립변수가 여러 개일 때는 벡터 형태로 제공한다. (e.g. \code{c(age, height)})}
+
+\item{.last_only}{.xvar 중 가장 마지막 변수에 대해서만 검정을 수행할 것인지 여부. Default: \code{FALSE}}
 }
 \value{
 \code{.xvar}의 각 변수에 대한 검정 결과 데이터프레임.

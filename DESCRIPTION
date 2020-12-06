@@ -7,14 +7,14 @@ Authors@R:
            role = c("aut", "cre"),
            email = "cakeil@gmail.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: "데이터마이닝 기법과 응용" (전치혁 지음, 한나래 출판사 2012) 교재에 설명된 각 과정들이 어떻게 수행되는지를 R 프로그래밍을 통해 보다 명확히 확인하기 위한 참고교재로 개발된 패키지입니다. 실무에서 사용하기에는 기본 base, stats 등의 패키지에 포함된 R 함수들이나 기존에 각각의 데이터마이닝 기법에 특화된 패키지들(e1701, arules 등)을 사용하는 것이 더 적합합니다. 
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Imports: 
     magrittr,
-    dplyr,
+    dplyr (>= 1.0.0),
     rlang,
     tidyr,
     purrr,
@@ -24,5 +24,5 @@ Suggests:
     knitr,
     rmarkdown,
     bookdown
-Depends: R (>= 2.10.0)
+Depends: R (>= 4.0.0)
 VignetteBuilder: knitr
