@@ -4,7 +4,13 @@
 \alias{predict_linear_regression}
 \title{다중선형회귀모형 미래반응치 예측.}
 \usage{
-predict_linear_regression(.fit, .new_data, .xvar, .interval = 0)
+predict_linear_regression(
+  .fit,
+  .new_data,
+  .xvar,
+  .ci_interval = 0,
+  .pi_interval = 0
+)
 }
 \arguments{
 \item{.fit}{회귀모형 추정 결과.}
@@ -13,7 +19,9 @@ predict_linear_regression(.fit, .new_data, .xvar, .interval = 0)
 
 \item{.xvar}{예측에 사용될 변수.}
 
-\item{.interval}{예측구간. 0인 경우 예측구간을 구하지 않으며, 0 과 1 사이일 경우 \code{(100 * .interval)}\%의 예측구간을 구한다.}
+\item{.ci_interval}{평균반응치 신뢰구간. 0(default값)인 경우 신뢰구간을 구하지 않으며, 0 과 1 사이일 경우 \code{(100 * .interval)}\%의 신뢰구간을 구한다.}
+
+\item{.pi_interval}{미래반응치 예측구간. 0(default값)인 경우 예측구간을 구하지 않으며, 0 과 1 사이일 경우 \code{(100 * .interval)}\%의 예측구간을 구한다.}
 }
 \value{
 애측값 데이터프레임.
@@ -25,6 +33,7 @@ predict_linear_regression(.fit, .new_data, .xvar, .interval = 0)
 data(biometric, package = "dmtr")
 fit <- fit_linear_regression(biometric, weight, c(age, height))
 predict_linear_regression(fit, biometric, c(age, height))
-predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, height), 0.95)
+predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, height), .ci_interval = 0.95)
+predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, height), .pi_interval = 0.95)
 
 }

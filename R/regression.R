@@ -95,21 +95,24 @@ fit_linear_regression <- function(.data, .yvar, .xvar) {
 #' @param .fit 회귀모형 추정 결과.
 #' @param .new_data 새 관측 데이터 프레임.
 #' @param .xvar 예측에 사용될 변수.
-#' @param .interval 예측구간. 0인 경우 예측구간을 구하지 않으며, 0 과 1 사이일 경우 \code{(100 * .interval)}\%의 예측구간을 구한다.
+#' @param .ci_interval 평균반응치 신뢰구간. 0(default값)인 경우 신뢰구간을 구하지 않으며, 0 과 1 사이일 경우 \code{(100 * .interval)}\%의 신뢰구간을 구한다.
+#' @param .pi_interval 미래반응치 예측구간. 0(default값)인 경우 예측구간을 구하지 않으며, 0 과 1 사이일 경우 \code{(100 * .interval)}\%의 예측구간을 구한다.
 #' @return 애측값 데이터프레임.
 #'
 #' @examples
 #' data(biometric, package = "dmtr")
 #' fit <- fit_linear_regression(biometric, weight, c(age, height))
 #' predict_linear_regression(fit, biometric, c(age, height))
-#' predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, height), 0.95)
+#' predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, height), .ci_interval = 0.95)
+#' predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, height), .pi_interval = 0.95)
 #'
 #' @export
 predict_linear_regression <- function(
   .fit,
   .new_data,
   .xvar,
-  .interval = 0) {
+  .ci_interval = 0,
+  .pi_interval = 0) {
   .xvar <- rlang::enquo(.xvar)
 
   betas <- matrix(.fit$betas, ncol = 1L)
@@ -123,15 +126,26 @@ predict_linear_regression <- function(
     .pred = as.vector(X %*% betas)
   )
 
-  if (.interval > 0 && .interval < 1) {
+  if (max(.ci_interval, .pi_interval) > 0 &&
+      max(.ci_interval, .pi_interval) < 1) {
     xtx <- solve(.fit$hessian / 2)
     se <- sqrt(.fit$mse * apply(X, 1, function(x, xtx) {t(x) %*% xtx %*% x}, xtx = xtx))
     res <- res %>%
-      dplyr::mutate(
-        .se = se,
-        .pi_lower = .pred + qt(0.5 - .interval / 2, .fit$df) * sqrt(.fit$mse + se ^ 2),
-        .pi_upper = .pred + qt(0.5 + .interval / 2, .fit$df) * sqrt(.fit$mse + se ^ 2)
-      )
+      dplyr::mutate(.se = se)
+    if (.ci_interval > 0) {
+      res <- res %>%
+        dplyr::mutate(
+          .ci_lower = .pred + qt(0.5 - .ci_interval / 2, .fit$df) * .se,
+          .ci_upper = .pred + qt(0.5 + .ci_interval / 2, .fit$df) * .se
+        )
+    }
+    if (.pi_interval > 0) {
+      res <- res %>%
+        dplyr::mutate(
+          .pi_lower = .pred + qt(0.5 - .pi_interval / 2, .fit$df) * sqrt(.fit$mse + .se ^ 2),
+          .pi_upper = .pred + qt(0.5 + .pi_interval / 2, .fit$df) * sqrt(.fit$mse + .se ^ 2)
+        )
+    }
   }
 
   return (res)
