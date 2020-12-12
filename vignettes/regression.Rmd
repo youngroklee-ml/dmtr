@@ -820,6 +820,56 @@ tibble(
 )
 ```
 
+위 각각의 평가척도는 함수 `eval_mad()`, `eval_mse()`, 그리고 `eval_rmse()`로 확인할 수 있다. 각 함수들은 관측치 벡터 `.y`와 예측치 벡터 `.y_hat`을 입력값으로 사용한다.
+
+```{r}
+list(
+  mad = eval_mad,
+  mse = eval_mse,
+  rmse = eval_rmse
+) %>%
+  purrr::map_dbl(
+    rlang::invoke,
+    .args = list(
+      .y = test_sample[["weight"]],
+      .y_hat = predict_linear_regression(fit, test_sample, c(age, height)) %>% pull(.pred)    
+    )
+  )
+```
+
+
+
+# 다중공선성
+
+독립변수들 사이에 상당히 높은 선형관계가 존재하는 현상을 다중공선성(multicollinearity)이라고 한다. 완전공선성(perfect collinearity)이 존재하는 경우에는 $\mathbf{X}^{\top} \mathbf{X}$의 역행렬이 존재하지 않아 회귀계수를 추정할 수 없게 된다. 완전공선성은 없다 하여도 다중공선성이 경우에는 추정된 회귀계수의 분산이 매우 커지며, 따라서 정확한 모수추정 및 검정에 어려움이 있다.
+
+
+## 다중공선성 척도 - 분산팽창계수(variance inflation factor; $VIF$)
+
+$j$번째 회귀계수의 추정량 $\hat{\beta}_j$에 대한 분산팽창계수 $VIF_j$는 다음과 같이 정의된다.
+
+\[
+VIF_j = \frac{1}{1 - R_j^2}
+\]
+
+여기서 $R_j$는 $j$번째 변수를 독립변수로 하고 나머지 $1, \ldots, j -1, j + 1, \ldots, k$ 번째 변수들을 독립변수로 하는 회귀모형에서의 결정계수를 말한다.
+
+각 독립변수에 대한 분산팽창계수를 계산은 함수 `vif_linear_regression()`으로 구현되어 있다.
+
+```{r}
+vif_linear_regression(biometric, c(age, height))
+```
+
+일반적으로 $k$개의 $VIF_j$ 중 가장 큰 값이 5를 넘으면(가장 큰 $R_j^2$이 0.8을 넘으면) 다중공선성이 있다고 할 수 있으며, 10보다 큰 값이면 심각하다고 볼 수 있다.
+
+
+## 다중공선성 해결 방법
+
+다중공선성을 해결하기 위한 이론적 방법으로는 모수추정을 위해 최소자승법 대신에 주성분회귀(principal component regression), 부분최소자승 회귀(partial least squares regression)를 사용하는 방법이 있다. 이 방법들은 다른 장에서 별도로 다룬다.
+
+
+# 지시변수와 회귀모형
+
 
 
 

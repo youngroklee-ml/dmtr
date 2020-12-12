@@ -439,3 +439,32 @@ select_variables_stepwise <- function(.data, .yvar, .xvar,
   }
 
 }
+
+
+#' 다중회귀모형 분산팽창계수
+#'
+#' 다중공선성의 정도를 알아보기 위해 분산팽창계수를 계산한다.
+#'
+#' @param .data 관측 데이터 프레임.
+#' @param .xvar 완전모형에 속할 독립변수. 독립변수가 여러 개일 때는 벡터 형태로 제공한다. (e.g. \code{c(age, height)})
+#' @return \code{.xvar}의 각 변수조합에 대한 분산팽창계수.
+#'
+#' @examples
+#' data(biometric, package = "dmtr")
+#' vif_linear_regression(biometric, c(age, height))
+#'
+#' @export
+vif_linear_regression <- function(.data, .xvar) {
+  .xvar <- rlang::enquo(.xvar)
+
+  variables <- tidyselect::eval_select(.xvar, .data) %>% names()
+
+  res <- purrr::map_dbl(
+    variables,
+    ~ 1 / (1 - fit_linear_regression(.data, .x, setdiff(variables, .x))[["rsq"]])
+  ) %>%
+    magrittr::set_names(variables) %>%
+    tibble::enframe(name = "terms", value = "vif")
+
+  return(res)
+}
