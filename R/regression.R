@@ -167,13 +167,16 @@ predict_linear_regression <- function(
 #' @export
 anova_linear_regression <- function(.fit) {
   dplyr::tibble(
-    source = c("회귀", "잔차", "전체"),
+    source = c("Model", "Residuals", "Total"),
     df = c(.fit$n - 1 - .fit$df, .fit$df, .fit$n - 1),
     ss = c(.fit$sst - .fit$mse * .fit$df, .fit$mse * .fit$df, .fit$sst)
   ) %>%
     dplyr::mutate(
-      ms = if_else(row_number() %in% c(1, 2), ss / df, NA_real_),
-      F_statistic = if_else(row_number() == 1, ms / lead(ms), NA_real_),
+      ms = dplyr::if_else(
+        dplyr::row_number() %in% c(1, 2), ss / df, NA_real_),
+      F_statistic = dplyr::if_else(
+        dplyr::row_number() == 1,
+        ms / dplyr::lead(ms), NA_real_),
       p_value = 1 - stats::pf(F_statistic, .fit$n - 1 - .fit$df, .fit$df)
     )
 }
@@ -331,6 +334,7 @@ test_type2_linear_regression <- function(.data, .yvar, .xvar, .last_only = FALSE
 #' @param .xvar 완전모형에 속할 독립변수. 독립변수가 여러 개일 때는 벡터 형태로 제공한다. (e.g. \code{c(age, height)})
 #' @param .alpha_in 변수 선택 단계에서 적용할 유의수준. Default: 0.05
 #' @param .alpha_out 변수 제거 단계에서 적용할 유의수준. \code{.alpha_in} 보다 크거나 같아야 한다. Default: 0.10
+#' @param .maxit 최대 iteration 수. Default: 100.
 #' @param .verbose 각 단계의 선택/제거 변수를 화면에 출력할 지 여부. Default: \code{TRUE}
 #' @return 최종 선택된 독립변수 이름 벡터.
 #'

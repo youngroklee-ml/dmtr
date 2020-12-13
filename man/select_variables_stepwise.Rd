@@ -25,6 +25,8 @@ select_variables_stepwise(
 
 \item{.alpha_out}{변수 제거 단계에서 적용할 유의수준. \code{.alpha_in} 보다 크거나 같아야 한다. Default: 0.10}
 
+\item{.maxit}{최대 iteration 수. Default: 100.}
+
 \item{.verbose}{각 단계의 선택/제거 변수를 화면에 출력할 지 여부. Default: \code{TRUE}}
 }
 \value{
