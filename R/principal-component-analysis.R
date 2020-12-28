@@ -65,11 +65,13 @@ fit_pca <- function(.data, .xvar = everything(), .pc = NULL, .center = TRUE, .sc
 
   x_center <- attr(X, "scaled:center")
   if (is.null(x_center)) {
-    x_center <- rep(0, length.out = ncol(X))
+    x_center <- rep(0, length.out = ncol(X)) %>%
+      rlang::set_names(variables)
   }
   x_scale <- attr(X, "scaled:scale")
   if (is.null(x_scale)) {
-    x_scale <- rep(1, length.out = ncol(X))
+    x_scale <- rep(1, length.out = ncol(X)) %>%
+      rlang::set_names(variables)
   }
 
   col_ss <- colSums(X ** 2)
@@ -114,14 +116,14 @@ fit_pca <- function(.data, .xvar = everything(), .pc = NULL, .center = TRUE, .sc
 #'
 #' @export
 predict_pca <- function(.fit, .new_data) {
-  .xvar <- rownames(.fit$loading)
+  .xvar <- rownames(.fit$loadings)
 
   X <- .new_data %>%
     dplyr::select(!!.xvar) %>%
     as.matrix() %>%
     scale(center = .fit$center, scale = .fit$scale)
 
-  res <- tibble::as_tibble(X %*% .fit$loading)
+  res <- tibble::as_tibble(X %*% .fit$loadings)
 
   return(res)
 }
@@ -181,6 +183,7 @@ fit_pcr <- function(.data, .yvar, .xvar, .pc = NULL, .center = TRUE, .scale = TR
 #'
 #' @param .fit 주성분 회귀모형 추정 결과.
 #' @param .new_data 새 관측 데이터 프레임.
+#' @param ... 함수 \code{predict_linear_regression()} 수행 시 사용할 파라미터 값.
 #' @return 예측값 데이터 프레임.
 #'
 #' @examples
@@ -189,9 +192,9 @@ fit_pcr <- function(.data, .yvar, .xvar, .pc = NULL, .center = TRUE, .scale = TR
 #' predict_pcr(fit, biometric)
 #'
 #' @export
-predict_pcr <- function(.fit, .new_data) {
+predict_pcr <- function(.fit, .new_data, ...) {
   predicted_score <- predict_pca(.fit, .new_data)
-  res <- predict_linear_regression(.fit, predicted_score, everything())
+  res <- predict_linear_regression(.fit, predicted_score, everything(), ...)
 
   return(res)
 }
