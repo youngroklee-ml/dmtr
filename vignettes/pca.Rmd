@@ -125,4 +125,14 @@ NIPALS 알고리즘은 아래와 같이 주성분 스코어 행렬 $\mathbf{T}$�
 print(nipals_pca)
 ```
 
+위 함수를 이용하여 주성분 분해를 수행하는 함수 `fit_pca()`를 실행해보자. 
+
+```{r}
+fit_pca(biometric, c(age, height, weight), .pc = 2L)
+```
+
+
+
+# 주성분 회귀분석 {#pcr}
+
 

@@ -99,6 +99,35 @@ fit_pca <- function(.data, .xvar = everything(), .pc = NULL, .center = TRUE, .sc
 }
 
 
+#' 주성분 스코어 계산.
+#'
+#' 주어진 주성분 분해 결과를 이용하여 새 데이터에 대해 주성분 스코어를 계산한다.
+#'
+#' @param .fit 주성분 분해 결과.
+#' @param .new_data 새 관측 데이터 프레임.
+#' @return 주성분 스코어 데이터프레임.
+#'
+#' @examples
+#' data(biometric, package = "dmtr")
+#' fit <- fit_pca(biometric, .pc = 2L)
+#' predict_pca(fit, biometric)
+#'
+#' @export
+predict_pca <- function(.fit, .new_data) {
+  .xvar <- rownames(.fit$loading)
+
+  X <- .new_data %>%
+    dplyr::select(!!.xvar) %>%
+    as.matrix() %>%
+    scale(center = .fit$center, scale = .fit$scale)
+
+  res <- tibble::as_tibble(X %*% .fit$loading)
+
+  return(res)
+}
+
+
+
 #' 주성분 회귀분석
 #'
 #' 주어진 데이터에 대하여 주성분 회귀모형을 추정한다.
@@ -130,8 +159,40 @@ fit_pcr <- function(.data, .yvar, .xvar, .pc = NULL, .center = TRUE, .scale = TR
 
   lm_fit <- fit_linear_regression(reg_data, !!.yvar, -!!.yvar)
 
-  pcr_beta <- lm_fit[["betas"]]
+  res <- c(pc_fit, lm_fit)
 
-  return(lm_fit)
+  intercept <- ((- t(pc_fit$center / pc_fit$scale) %*% pc_fit$loadings) %*%
+    lm_fit$betas[colnames(pc_fit$loadings)]) %>%
+    `+`(lm_fit$betas["(Intercept)"]) %>%
+    drop()
+
+  betas <- (1 / pc_fit$scale) *
+    drop(pc_fit$loadings %*% lm_fit$betas[colnames(pc_fit$loadings)])
+
+  res[["org_betas"]] <- c("(Intercept)" = intercept, betas)
+
+  return(res)
+}
+
+
+#' 주성분 회귀분석 반응치 예측.
+#'
+#' 주성분 회귀모형 추정 이후 새로운 데이터에 대한 반응치를 예측한다.
+#'
+#' @param .fit 주성분 회귀모형 추정 결과.
+#' @param .new_data 새 관측 데이터 프레임.
+#' @return 예측값 데이터 프레임.
+#'
+#' @examples
+#' data(biometric, package = "dmtr")
+#' fit <- fit_pcr(biometric, weight, c(age, height), .pc = 1L)
+#' predict_pcr(fit, biometric)
+#'
+#' @export
+predict_pcr <- function(.fit, .new_data) {
+  predicted_score <- predict_pca(.fit, .new_data)
+  res <- predict_linear_regression(.fit, predicted_score, everything())
+
+  return(res)
 }
 
