@@ -29,13 +29,13 @@ nipals_plsr <- function(X, y, ncomp = NULL) {
 
   for (a in seq_len(ncomp)) {
     Wmat[, a] <- 1 / sum(y ^ 2) * (t(X) %*% y)
-    Wmat[, a] <- Wmat[, a] / sqrt(sum(Wmat[, a] ^ 2))
+    Wmat[, a] <- Wmat[, a] / norm(Wmat[, a], "2")
 
     Tmat[, a] <- X %*% Wmat[, a]
 
     Pmat[, a] <- 1 / sum(Tmat[, a] ^ 2) * (t(X) %*% Tmat[, a])
 
-    p_size <- sqrt(sum(Pmat[, a] ^ 2))
+    p_size <- norm(Pmat[, a], "2")
     Tmat[, a] <- Tmat[, a] * p_size
     Wmat[, a] <- Wmat[, a] * p_size
 
@@ -95,12 +95,12 @@ nipals_plsr_n <- function(X, Y, ncomp = NULL) {
 
     while (TRUE) {
       Wmat[, a] <- 1 / sum(Umat[, a] ^ 2) * (t(X) %*% Umat[, a])
-      Wmat[, a] <- Wmat[, a] / sqrt(sum(Wmat[, a] ^ 2))
+      Wmat[, a] <- Wmat[, a] / norm(Wmat[, a], "2")
 
       Tmat[, a] <- X %*% Wmat[, a]
 
       Qmat[, a] <- 1 / sum(Tmat[, a] ^ 2) * (t(Y) %*% Tmat[, a])
-      Qmat[, a] <- Qmat[, a] / sqrt(sum(Qmat[, a] ^ 2))
+      Qmat[, a] <- Qmat[, a] / norm(Qmat[, a], "2")
 
       u_new <- Y %*% Qmat[, a]
 
@@ -111,7 +111,7 @@ nipals_plsr_n <- function(X, Y, ncomp = NULL) {
 
     Pmat[, a] <- 1 / sum(Tmat[, a] ^ 2) * (t(X) %*% Tmat[, a])
 
-    p_size <- sqrt(sum(Pmat[, a] ^ 2))
+    p_size <- norm(Pmat[, a], "2")
     Tmat[, a] <- Tmat[, a] * p_size
     Wmat[, a] <- Wmat[, a] * p_size
 
