@@ -1,0 +1,44 @@
+---
+title: "트리기반 기법"
+output: 
+  bookdown::html_document2:
+    base_format: rmarkdown::html_vignette
+bibliography: book.bib
+biblio-style: apalike
+link-citations: yes
+vignette: >
+  %\VignetteIndexEntry{08 트리기반 기법}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+pkgdown:
+  as_is: true
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+library(dmtr)
+library(dplyr)
+```
+
+
+# 데이터 {#tree-data}
+
+```{r binaryclass3-data-load}
+data("binaryclass3_train", package = "dmtr")
+```
+
+```{r binaryclass3-data-print, echo = FALSE}
+knitr::kable(
+  binaryclass3_train, 
+  booktabs = TRUE,
+  align = c('r', 'r', 'r'),
+  caption = '두 개의 범주값과 두 개의 변수를 지닌 학습표본'
+)
+```
+

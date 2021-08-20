@@ -10,6 +10,8 @@ vignette: >
   %\VignetteIndexEntry{04 부분최소자승 회귀분석}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+pkgdown:
+  as_is: true
 ---
 
 ```{r, include = FALSE}
