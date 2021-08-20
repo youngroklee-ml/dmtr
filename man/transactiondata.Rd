@@ -5,19 +5,16 @@
 \alias{transactiondata}
 \title{트랜잭션.}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 21 rows and 2 columns.
+21개의 행과 2개의 열로 이루어진 데이터 프레임:
+\describe{
+  \item{transaction_id}{트랜잭션 고유번호}
+  \item{item}{항목}
+}
 }
 \usage{
 transactiondata
 }
 \description{
 총 5개의 트랜잭션에서 각 트랜잭션에 포함된 항목들을 나타낸 long-form 데이터 프레임.
-}
-\details{
-@format 21개의 행과 2개의 열로 이루어진 데이터 프레임:
- \describe{
-   \item{transaction_id}{트랜잭션 고유번호}
-   \item{item}{항목}
- }
 }
 \keyword{datasets}

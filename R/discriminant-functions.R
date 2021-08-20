@@ -152,13 +152,13 @@ ld_fun <- function(.data, .group_var, .xvar) {
 score_da <- function(.f, .new_data, .xvar) {
   .xvar <- rlang::enquo(.xvar)
 
-  u_df <- purrr::map_dfc(f,
+  u_df <- purrr::map_dfc(.f,
     ~ .new_data %>%
       dplyr::select(!!.xvar) %>%
       dplyr::transmute(u = apply(., 1, .x))
   )
 
-  names(u_df) <- stringr::str_c(".score", attr(f, "group"), sep = "_")
+  names(u_df) <- stringr::str_c(".score", attr(.f, "group"), sep = "_")
 
   return(u_df)
 }
@@ -199,10 +199,10 @@ predict_da <- function(.f, .new_data, .xvar,
     dplyr::mutate_all(exp) %>%
     dplyr::mutate_all(function(x) x / rowSums(.))
 
-  names(p_df) <- stringr::str_c(".pred", attr(f, "group"), sep = "_")
+  names(p_df) <- stringr::str_c(".pred", attr(.f, "group"), sep = "_")
 
   yhat_df <- dplyr::tibble(
-    .pred_class = attr(f, "group")[apply(p_df, 1, which.max)]
+    .pred_class = attr(.f, "group")[apply(p_df, 1, which.max)]
   )
 
   res <- NULL
