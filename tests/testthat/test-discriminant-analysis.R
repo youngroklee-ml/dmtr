@@ -17,7 +17,7 @@ test_that("Discriminant function matches", {
   )
 })
 
-test_that("LDA score matches", {
+test_that("LDA score matches: w/o prior", {
   expect(
     all(
       dplyr::near(
@@ -41,6 +41,36 @@ test_that("LDA score matches", {
         tol = 1e-6
       )
     ),
-    failure_message = "Estimated discriminant scores do not match to book example"
+    failure_message = "Estimated discriminant scores do not match to expected results"
   )
 })
+
+
+test_that("LDA score matches: with prior", {
+  expect(
+    all(
+      dplyr::near(
+        ld_fun(binaryclass2, class, c(x1, x2), .prior = c(0.4, 0.6)) %>%
+          score_da(binaryclass2, c(x1, x2)) %>%
+          as.matrix(),
+        matrix(
+          data = c(
+            9.100,	7.048,
+            -2.042,	0.566,
+            10.901,	10.323,
+            4.486,	8.500,
+            7.300,	3.773,
+            4.936,	1.444,
+            5.611,	6.609,
+            3.923,	9.445,
+            0.322,	2.895
+          ),
+          nrow = 9, ncol = 2, byrow = TRUE
+        ),
+        tol = 1e-3
+      )
+    ),
+    failure_message = "Estimated discriminant scores do not match to expected results"
+  )
+})
+
