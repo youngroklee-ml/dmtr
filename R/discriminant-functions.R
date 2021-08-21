@@ -99,6 +99,7 @@ fisher_ld_prediction <- function(.w, .z, .newdata, .xvar, .levels = c(1L, 2L)) {
 #' @param .data 관측 데이터 프레임.
 #' @param .group_var 범주변수.
 #' @param .xvar 범주 분류에 사용될 변수.
+#' @param .prior 범주 사전 확률. NULL일 때는 데이터 프레임 \code{.data}내의 각 범주의 비율을 사전확률로 추정.  default: NULL
 #' @return 범주별 판별 함수.
 #'
 #' @examples
@@ -106,25 +107,32 @@ fisher_ld_prediction <- function(.w, .z, .newdata, .xvar, .levels = c(1L, 2L)) {
 #' f <- ld_fun(binaryclass2, class, c(x1, x2))
 #'
 #' @export
-ld_fun <- function(.data, .group_var, .xvar) {
+ld_fun <- function(.data, .group_var, .xvar, .prior = NULL) {
   .group_var <- rlang::enquo(.group_var)
   .xvar <- rlang::enquo(.xvar)
 
   summ <- group_summary(.data, !!.group_var, !!.xvar)
 
+  if (is.null(.prior)) {
+    .prior <- purrr::map_dbl(summ, ~ .[["n"]] / nrow(.data))
+  }
+
+  stopifnot(length(attr(summ, "group")) == length(.prior))
+
   sigma_hat <- pooled_variance(.data, !!.group_var, !!.xvar)
   sigma_hat_inv <- solve(sigma_hat)
 
-  fn <- purrr::map(summ, ~ function(x) {
+  fn <- purrr::map2(
+    summ, .prior,
+    ~ function(x) {
     if (is.list(x)) x <- unlist(x)
     if (is.vector(x)) x <- matrix(x, ncol = 1L)
 
     mu_hat <- matrix(.x[["mean"]], ncol = 1L)
-    pi_hat <- .x[["n"]] / nrow(.data)
 
     res <- t(mu_hat) %*% sigma_hat_inv %*% x -
       1 / 2 * t(mu_hat) %*% sigma_hat_inv %*%  mu_hat +
-      log(pi_hat)
+      log(.y)
 
     drop(res)
   })

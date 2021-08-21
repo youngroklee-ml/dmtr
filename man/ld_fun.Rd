@@ -4,7 +4,7 @@
 \alias{ld_fun}
 \title{범주별 판별함수 - 선형 판별 분석.}
 \usage{
-ld_fun(.data, .group_var, .xvar)
+ld_fun(.data, .group_var, .xvar, .prior = NULL)
 }
 \arguments{
 \item{.data}{관측 데이터 프레임.}
@@ -12,6 +12,8 @@ ld_fun(.data, .group_var, .xvar)
 \item{.group_var}{범주변수.}
 
 \item{.xvar}{범주 분류에 사용될 변수.}
+
+\item{.prior}{범주 사전 확률. NULL일 때는 데이터 프레임 \code{.data}내의 각 범주의 비율을 사전확률로 추정.  default: NULL}
 }
 \value{
 범주별 판별 함수.
