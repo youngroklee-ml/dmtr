@@ -1,0 +1,12 @@
+pandoc: 2.11.4
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  discriminant-analysis: discriminant-analysis.html
+  logistic-regression: logistic-regression.html
+  pca: pca.html
+  plsr: plsr.html
+  regression: regression.html
+  tree: tree.html
+last_built: 2021-08-21T21:53Z
+
