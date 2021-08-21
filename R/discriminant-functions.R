@@ -152,10 +152,17 @@ ld_fun <- function(.data, .group_var, .xvar) {
 score_da <- function(.f, .new_data, .xvar) {
   .xvar <- rlang::enquo(.xvar)
 
-  u_df <- purrr::map_dfc(.f,
-    ~ .new_data %>%
-      dplyr::select(!!.xvar) %>%
-      dplyr::transmute(u = apply(., 1, .x))
+  u_df <- purrr::map2_dfc(.f, attr(.f, "group"),
+    function(f, class, xvar, data) {
+      xvar <- rlang::enquo(xvar)
+      uvar <- rlang::sym(stringr::str_c("u", class))
+
+      data %>%
+        dplyr::select(!!xvar) %>%
+        dplyr::transmute(!!uvar := apply(., 1, f))
+    },
+    xvar = !!.xvar,
+    data = .new_data
   )
 
   names(u_df) <- stringr::str_c(".score", attr(.f, "group"), sep = "_")
