@@ -378,7 +378,7 @@ predict_df <- bind_cols(iris90, predict_df)
 
 ```{r ld-iris-prediction, echo = FALSE}
 knitr::kable(
-  prediction_df,
+  predict_df,
   align = rep('r', ncol(prediction_df)),
   digits = 2L,
   caption = '붗꽃 표본에 대한 LDA 적용 결과: 판별함수값, 사후확률 및 추정범주'
@@ -411,7 +411,7 @@ predict_df <- bind_cols(iris90, predict_df)
 
 ```{r qd-iris-prediction, echo = FALSE}
 knitr::kable(
-  prediction_df,
+  predict_df,
   align = rep('r', ncol(prediction_df)),
   digits = 2L,
   caption = '붗꽃 표본에 대한 QDA 적용 결과: 판별함수값, 사후확률 및 추정범주'
