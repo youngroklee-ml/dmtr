@@ -281,14 +281,14 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; $betas</span>
 <span class="co">#&gt; (Intercept)          x1          x2          x3 </span>
-<span class="co">#&gt;  -30.513139    2.029573    3.471030    2.414309 </span>
+<span class="co">#&gt;  -30.541437    2.031033    3.474350    2.415946 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $hessian</span>
 <span class="co">#&gt;             (Intercept)         x1         x2         x3</span>
-<span class="co">#&gt; (Intercept)  -1.6886367 -0.6966995 -12.653132  -2.596954</span>
-<span class="co">#&gt; x1           -0.6966995 -0.6966995  -5.003049  -1.032880</span>
-<span class="co">#&gt; x2          -12.6531323 -5.0030494 -96.043058 -18.003111</span>
-<span class="co">#&gt; x3           -2.5969543 -1.0328802 -18.003111  -6.463490</span></code></pre></div>
+<span class="co">#&gt; (Intercept)  -1.6877910 -0.6964848 -12.647002  -2.595634</span>
+<span class="co">#&gt; x1           -0.6964848 -0.6964848  -5.001478  -1.032751</span>
+<span class="co">#&gt; x2          -12.6470015 -5.0014778 -95.997773 -17.994098</span>
+<span class="co">#&gt; x3           -2.5956336 -1.0327513 -17.994098  -6.460691</span></code></pre></div>
 <p>위 추정계수와 헤시안 행렬(Hessian matrix)를 이용하여 아래와 같이 결과를 요약할 수 있다.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_summary_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
@@ -313,8 +313,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">-30.51</td>
-<td align="right">18.02</td>
+<td align="right">-30.54</td>
+<td align="right">18.04</td>
 <td align="right">-1.69</td>
 <td align="right">0.09</td>
 <td align="right">NA</td>
@@ -325,7 +325,7 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">1.98</td>
 <td align="right">1.02</td>
 <td align="right">0.31</td>
-<td align="right">7.61</td>
+<td align="right">7.62</td>
 </tr>
 <tr class="odd">
 <td align="left">x2</td>
@@ -333,15 +333,15 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">2.08</td>
 <td align="right">1.67</td>
 <td align="right">0.09</td>
-<td align="right">32.17</td>
+<td align="right">32.28</td>
 </tr>
 <tr class="even">
 <td align="left">x3</td>
-<td align="right">2.41</td>
+<td align="right">2.42</td>
 <td align="right">1.40</td>
 <td align="right">1.73</td>
 <td align="right">0.08</td>
-<td align="right">11.18</td>
+<td align="right">11.20</td>
 </tr>
 </tbody>
 </table>
@@ -373,8 +373,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">8</td>
 <td align="right">2</td>
 <td align="right">우수</td>
-<td align="right">0.8893106044</td>
-<td align="right">0.11068940</td>
+<td align="right">0.8894618835</td>
+<td align="right">0.11053812</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
@@ -382,8 +382,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">7</td>
 <td align="right">1</td>
 <td align="right">우수</td>
-<td align="right">0.1452878406</td>
-<td align="right">0.85471216</td>
+<td align="right">0.1450447106</td>
+<td align="right">0.85495529</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
@@ -391,8 +391,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">9</td>
 <td align="right">0</td>
 <td align="right">우수</td>
-<td align="right">0.6739555225</td>
-<td align="right">0.32604448</td>
+<td align="right">0.6743032806</td>
+<td align="right">0.32569672</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
@@ -400,8 +400,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">6</td>
 <td align="right">4</td>
 <td align="right">우수</td>
-<td align="right">0.8807812660</td>
-<td align="right">0.11921873</td>
+<td align="right">0.8807427092</td>
+<td align="right">0.11925729</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
@@ -409,8 +409,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">8</td>
 <td align="right">2</td>
 <td align="right">우수</td>
-<td align="right">0.9839092825</td>
-<td align="right">0.01609072</td>
+<td align="right">0.9839566823</td>
+<td align="right">0.01604332</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
@@ -418,8 +418,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">7</td>
 <td align="right">3</td>
 <td align="right">우수</td>
-<td align="right">0.7363334140</td>
-<td align="right">0.26366659</td>
+<td align="right">0.7363052628</td>
+<td align="right">0.26369474</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
@@ -427,8 +427,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">7</td>
 <td align="right">0</td>
 <td align="right">보통</td>
-<td align="right">0.0019933773</td>
-<td align="right">0.99800662</td>
+<td align="right">0.0019833417</td>
+<td align="right">0.99801666</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
@@ -436,8 +436,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">6</td>
 <td align="right">1</td>
 <td align="right">보통</td>
-<td align="right">0.0052561951</td>
-<td align="right">0.99474380</td>
+<td align="right">0.0052286634</td>
+<td align="right">0.99477134</td>
 </tr>
 <tr class="odd">
 <td align="right">9</td>
@@ -445,8 +445,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">7</td>
 <td align="right">2</td>
 <td align="right">보통</td>
-<td align="right">0.1998373194</td>
-<td align="right">0.80016268</td>
+<td align="right">0.1995524594</td>
+<td align="right">0.80044754</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
@@ -454,8 +454,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">8</td>
 <td align="right">1</td>
 <td align="right">보통</td>
-<td align="right">0.4180969386</td>
-<td align="right">0.58190306</td>
+<td align="right">0.4180726842</td>
+<td align="right">0.58192732</td>
 </tr>
 <tr class="odd">
 <td align="right">11</td>
@@ -463,8 +463,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">5</td>
 <td align="right">2</td>
 <td align="right">보통</td>
-<td align="right">0.0002412655</td>
-<td align="right">0.99975873</td>
+<td align="right">0.0002392424</td>
+<td align="right">0.99976076</td>
 </tr>
 <tr class="even">
 <td align="right">12</td>
@@ -472,8 +472,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">8</td>
 <td align="right">0</td>
 <td align="right">보통</td>
-<td align="right">0.3284228369</td>
-<td align="right">0.67157716</td>
+<td align="right">0.3283618471</td>
+<td align="right">0.67163815</td>
 </tr>
 <tr class="odd">
 <td align="right">13</td>
@@ -481,8 +481,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">6</td>
 <td align="right">3</td>
 <td align="right">보통</td>
-<td align="right">0.0798760528</td>
-<td align="right">0.92012395</td>
+<td align="right">0.0796217499</td>
+<td align="right">0.92037825</td>
 </tr>
 <tr class="even">
 <td align="right">14</td>
@@ -490,8 +490,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">7</td>
 <td align="right">2</td>
 <td align="right">보통</td>
-<td align="right">0.6552644294</td>
-<td align="right">0.34473557</td>
+<td align="right">0.6551917254</td>
+<td align="right">0.34480827</td>
 </tr>
 <tr class="odd">
 <td align="right">15</td>
@@ -499,8 +499,8 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">6</td>
 <td align="right">1</td>
 <td align="right">보통</td>
-<td align="right">0.0006937878</td>
-<td align="right">0.99930621</td>
+<td align="right">0.0006891306</td>
+<td align="right">0.99931087</td>
 </tr>
 </tbody>
 </table>
@@ -711,25 +711,25 @@ L &amp;=&amp; \prod_{i = 1}^{n} \frac{1}{1 + \sum_{j = 2}^{J} \exp \left( \beta_
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; $betas</span>
 <span class="co">#&gt;                     1          2</span>
-<span class="co">#&gt; (Intercept) -63.93677 -117.32023</span>
-<span class="co">#&gt; x1          101.84030  132.10312</span>
-<span class="co">#&gt; x2           10.75885   20.67103</span>
+<span class="co">#&gt; (Intercept) -63.27891 -116.64028</span>
+<span class="co">#&gt; x1          101.86888  132.24309</span>
+<span class="co">#&gt; x2           10.62636   20.53195</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $hessian</span>
 <span class="co">#&gt;               (Intercept):1        x1:1       x2:1 (Intercept):2        x1:2</span>
-<span class="co">#&gt; (Intercept):1    -3.9789256 -0.41890606 -19.920018     1.9938646  0.21773641</span>
-<span class="co">#&gt; x1:1             -0.4189061 -0.04458264  -2.096425     0.2177364  0.02398848</span>
-<span class="co">#&gt; x2:1            -19.9200176 -2.09642482 -99.749541    10.0374052  1.09539047</span>
-<span class="co">#&gt; (Intercept):2     1.9938646  0.21773641  10.037405    -2.8636663 -0.30641151</span>
-<span class="co">#&gt; x1:2              0.2177364  0.02398848   1.095390    -0.3064115 -0.03311574</span>
-<span class="co">#&gt; x2:2             10.0374121  1.09539125  50.542658   -14.3928799 -1.53920488</span>
+<span class="co">#&gt; (Intercept):1    -3.9790583 -0.41891689 -19.920378     1.9934208  0.21773296</span>
+<span class="co">#&gt; x1:1             -0.4189169 -0.04458330  -2.096449     0.2177330  0.02399281</span>
+<span class="co">#&gt; x2:1            -19.9203780 -2.09644872 -99.749842    10.0347218  1.09532372</span>
+<span class="co">#&gt; (Intercept):2     1.9934208  0.21773297  10.034722    -2.8652392 -0.30660688</span>
+<span class="co">#&gt; x1:2              0.2177330  0.02399281   1.095324    -0.3066069 -0.03313953</span>
+<span class="co">#&gt; x2:2             10.0347287  1.09532450  50.526900   -14.4005818 -1.54016338</span>
 <span class="co">#&gt;                     x2:2</span>
-<span class="co">#&gt; (Intercept):1  10.037412</span>
-<span class="co">#&gt; x1:1            1.095391</span>
-<span class="co">#&gt; x2:1           50.542658</span>
-<span class="co">#&gt; (Intercept):2 -14.392880</span>
-<span class="co">#&gt; x1:2           -1.539205</span>
-<span class="co">#&gt; x2:2          -72.356192</span></code></pre></div>
+<span class="co">#&gt; (Intercept):1  10.034729</span>
+<span class="co">#&gt; x1:1            1.095324</span>
+<span class="co">#&gt; x2:1           50.526900</span>
+<span class="co">#&gt; (Intercept):2 -14.400582</span>
+<span class="co">#&gt; x1:2           -1.540163</span>
+<span class="co">#&gt; x2:2          -72.393908</span></code></pre></div>
 </div>
 </div>
 <div id="ordinal-logistic-regression" class="section level1" number="3">
@@ -851,14 +851,14 @@ L &amp;=&amp; \prod_{i = 1}^{n} \frac{1}{1 + \sum_{j = 2}^{J} \exp \left( \beta_
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; $par</span>
-<span class="co">#&gt; [1] -13.0325075 -11.3957545   0.2235936   0.2997921</span>
+<span class="co">#&gt; [1] -13.0415774 -11.4040818   0.2237915   0.2999291</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $value</span>
-<span class="co">#&gt; [1] -6.441253</span>
+<span class="co">#&gt; [1] -6.441254</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $counts</span>
 <span class="co">#&gt; function gradient </span>
-<span class="co">#&gt;      491       NA </span>
+<span class="co">#&gt;      645       NA </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $convergence</span>
 <span class="co">#&gt; [1] 0</span>
@@ -868,10 +868,10 @@ L &amp;=&amp; \prod_{i = 1}^{n} \frac{1}{1 + \sum_{j = 2}^{J} \exp \left( \beta_
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $hessian</span>
 <span class="co">#&gt;             [,1]        [,2]        [,3]       [,4]</span>
-<span class="co">#&gt; [1,]  -1.3662400   0.6000481   -24.20799  -15.81071</span>
-<span class="co">#&gt; [2,]   0.6000481  -1.4681762   -27.55044  -12.06552</span>
-<span class="co">#&gt; [3,] -24.2079854 -27.5504374 -1706.56279 -842.91649</span>
-<span class="co">#&gt; [4,] -15.8107097 -12.0655153  -842.91649 -559.66016</span></code></pre></div>
+<span class="co">#&gt; [1,]  -1.3652469   0.5993877   -24.19675  -15.80348</span>
+<span class="co">#&gt; [2,]   0.5993877  -1.4670866   -27.53628  -12.06121</span>
+<span class="co">#&gt; [3,] -24.1967514 -27.5362835 -1705.67859 -842.52837</span>
+<span class="co">#&gt; [4,] -15.8034828 -12.0612112  -842.52837 -559.44557</span></code></pre></div>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-czepiel2002maximum" class="csl-entry">
 Czepiel, Scott A. 2002. <span>“Maximum Likelihood Estimation of Logistic Regression Models: Theory and Implementation.”</span> <em>Available at Czep. Net/Stat/Mlelr. Pdf</em>.
