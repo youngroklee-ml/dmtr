@@ -170,3 +170,13 @@ test_that("QDA score matches: when prior is provided", {
   )
 })
 
+test_that("QDA classification matches: when prior is provided", {
+  expect(identical(
+    qd_fun(binaryclass2, class, c(x1, x2), .prior = c(0.5, 0.5)) %>%
+      predict_da(binaryclass2, c(x1, x2)),
+    tibble(.pred_class = factor(c(
+      1, 2, 2, 2, 1, 1, 1, 2, 2
+    ), levels = c(1, 2)))
+  ),
+  failure_message = "QDA classification results do not match to expected results")
+})
