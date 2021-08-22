@@ -283,7 +283,7 @@
 
 #' 붓꽃 데이터.
 #'
-#' \code{\link[datasets]{iris}}의 150개 데이터 중 각 범주 별 30개의 관측치를 모아 총 90개의 관측치로 구성한
+#' 교재 [예제 6.6]의 150개 데이터 중 각 범주 별 첫 30개의 관측치를 모아 총 90개의 관측치로 구성한
 #' 데이터.
 #'
 #' @format 90개의 행과 6개의 열로 이루어진 데이터 프레임:
@@ -295,8 +295,6 @@
 #'   \item{x4}{Petal.Width}
 #'   \item{class}{범주 (setosa, versicolor, virginica)}
 #' }
-#'
-#' @source \code{\link[datasets]{iris}}
 "iris90"
 
 
