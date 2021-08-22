@@ -114,7 +114,7 @@ ld_fun <- function(.data, .group_var, .xvar, .prior = NULL) {
   summ <- group_summary(.data, !!.group_var, !!.xvar)
 
   if (is.null(.prior)) {
-    .prior <- purrr::map_dbl(summ, ~ .[["n"]] / nrow(.data))
+    .prior <- purrr::map_dbl(summ, ~ .x[["n"]] / nrow(.data))
   }
 
   stopifnot(length(attr(summ, "group")) == length(.prior))
@@ -236,6 +236,7 @@ predict_da <- function(.f, .new_data, .xvar,
 #' @param .data 관측 데이터 프레임.
 #' @param .group_var 범주변수.
 #' @param .xvar 범주 분류에 사용될 변수.
+#' @param .prior 범주 사전 확률. NULL일 때는 데이터 프레임 \code{.data}내의 각 범주의 비율을 사전확률로 추정.  default: NULL
 #' @return 범주별 판별 함수.
 #'
 #' @examples
@@ -243,23 +244,28 @@ predict_da <- function(.f, .new_data, .xvar,
 #' f <- qd_fun(binaryclass2, class, c(x1, x2))
 #'
 #' @export
-qd_fun <- function(.data, .group_var, .xvar) {
+qd_fun <- function(.data, .group_var, .xvar, .prior = NULL) {
   .group_var <- rlang::enquo(.group_var)
   .xvar <- rlang::enquo(.xvar)
 
   summ <- group_summary(.data, !!.group_var, !!.xvar)
 
-  fn <- purrr::map(summ, ~ function(x) {
+  if (is.null(.prior)) {
+    .prior <- purrr::map_dbl(summ, ~ .x[["n"]] / nrow(.data))
+  }
+
+  stopifnot(length(attr(summ, "group")) == length(.prior))
+
+  fn <- purrr::map2(summ, .prior, ~ function(x) {
     if (is.list(x)) x <- unlist(x)
     if (is.vector(x)) x <- matrix(x, ncol = 1L)
 
     mu_hat <- matrix(.x[["mean"]], ncol = 1L)
     sigma_hat <- .x[["sigma"]]
     sigma_hat_inv <- solve(sigma_hat)
-    pi_hat <- .x[["n"]] / nrow(.data)
 
     res <- - 1 / 2 * t(mu_hat - x) %*% sigma_hat_inv %*% (mu_hat - x) -
-      1 /2 * log(det(sigma_hat)) + log(pi_hat)
+      1 /2 * log(det(sigma_hat)) + log(.y)
 
     drop(res)
   })
