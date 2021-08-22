@@ -4,7 +4,7 @@ library(dplyr)
 
 data(binaryclass2, package = "dmtr")
 
-test_that("Discriminant function matches", {
+test_that("Fisher discriminant function matches", {
   expect(
     all(
       dplyr::near(
@@ -73,7 +73,7 @@ test_that("LDA score matches: when prior is provided", {
   )
 })
 
-test_that("Posterior matches: when prior is provided", {
+test_that("LDA posterior matches: when prior is provided", {
   expect(
     all(
       dplyr::near(
@@ -103,3 +103,13 @@ test_that("Posterior matches: when prior is provided", {
   )
 })
 
+test_that("LDA classification matches: when prior is provided", {
+  expect(identical(
+    ld_fun(binaryclass2, class, c(x1, x2), .prior = c(0.5, 0.5)) %>%
+      predict_da(binaryclass2, c(x1, x2)),
+    tibble(.pred_class = factor(c(
+      1, 2, 1, 2, 1, 1, 2, 2, 2
+    ), levels = c(1, 2)))
+  ),
+  failure_message = "LDA classification results do not match to expected results")
+})
