@@ -3,6 +3,7 @@ context("Discriminant analysis")
 library(dplyr)
 
 data(binaryclass2, package = "dmtr")
+data(iris90, package = "dmtr")
 
 test_that("Fisher discriminant function matches", {
   expect(
@@ -180,3 +181,27 @@ test_that("QDA classification matches: when prior is provided", {
   ),
   failure_message = "QDA classification results do not match to expected results")
 })
+
+test_that("LDA on iris data", {
+  expect(all(dplyr::near(
+    ld_fun(iris90, class, x1:x4) %>%
+      score_da(
+        .new_data = tibble::tribble(
+          ~x1, ~x2, ~x3, ~x4,
+          5.1, 3.5, 1.4, 0.2,
+          7.0, 3.2, 4.7, 1.4,
+          6.3, 3.3, 6.0, 2.5
+        ),
+        .xvar = x1:x4
+      ) %>%
+      as.matrix(),
+    matrix(c(
+      70.24, 22.26, -22.26,
+      29.19, 69.92, 61.26,
+      -1.11, 91.80, 108.10
+    ), ncol = 3, byrow = TRUE) + log(1 / 3),
+    tol = 0.01
+  )),
+  failure_message = "LDA results do not match to expected results")
+})
+
