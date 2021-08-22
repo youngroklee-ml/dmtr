@@ -142,4 +142,31 @@ test_that("QDA score matches: when prior is not provided", {
   )
 })
 
+test_that("QDA score matches: when prior is provided", {
+  expect(
+    all(
+      dplyr::near(
+        qd_fun(binaryclass2, class, c(x1, x2), .prior = c(0.5, 0.5)) %>%
+          score_da(binaryclass2, c(x1, x2)) %>%
+          as.matrix(),
+        matrix(
+          data = c(
+            -0.9156,	-3.3617,
+            -12.3722,	-1.9094,
+            -3.0959,	-2.5561,
+            -4.4603,	-1.2805,
+            -0.3713,	-5.1755,
+            -0.9174,	-5.6144,
+            -1.1885,	-1.3457,
+            -6.9143,	-1.9943,
+            -7.4625,	-1.3397
+          ) + log(0.5),
+          nrow = 9, ncol = 2, byrow = TRUE
+        ),
+        tol = 1e-2
+      )
+    ),
+    failure_message = "Estimated discriminant scores do not match to expected results"
+  )
+})
 
