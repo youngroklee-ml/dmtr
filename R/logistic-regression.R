@@ -9,9 +9,30 @@
 loglik_binary_logistic_regression <- function(.betas, .x, .y) {
   .betas <- matrix(.betas, ncol = 1L)
   p <- 1 - (1 + exp(.x %*% .betas)) ^ (-1)
+  p <- drop(p)
   res <- sum(.y * log(p) + (1L - .y) * log(1 - p))
   return (res)
 }
+
+#' 이분 로지스틱 회귀분석 로그우도함수의 gradient.
+#'
+#' 주어진 계수에서 우도함수의 편미분값을 계산한다.
+#'
+#' @param .betas 계수 벡터.
+#' @param .x 독립변수 행렬.
+#' @param .y 종속변수 벡터.
+#' @return 편미분값 벡터.
+grad_binary_logistic_regression <- function(.betas, .x, .y) {
+  .betas <- matrix(.betas, ncol = 1L)
+  p <- 1 - (1 + exp(.x %*% .betas)) ^ (-1)
+  p <- drop(p)
+  q <- exp(.x %*% .betas)
+  q <- drop(q)
+  dp <- (q / ((1 + q) ^ 2)) * .x
+  res <- colSums((.y / p - (1 - .y) / (1 - p)) * dp)
+  return (res)
+}
+
 
 
 #' 이분 로지스틱 회귀분석 계수 추정.
@@ -59,7 +80,10 @@ fit_binary_logistic_regression <- function(
     dplyr::transmute(..y = dplyr::if_else(!!.group_var == .reflevel, 0L, 1L)) %>%
     dplyr::pull(..y)
 
-  fit <- stats::optim(betas, loglik_binary_logistic_regression,
+  fit <- stats::optim(
+    betas,
+    fn = loglik_binary_logistic_regression,
+    gr = grad_binary_logistic_regression,
     .x = X,
     .y = y,
     control = .control,
