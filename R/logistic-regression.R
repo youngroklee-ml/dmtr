@@ -11,7 +11,7 @@ loglik_binary_logistic_regression <- function(.betas, .x, .y) {
   p <- 1 - (1 + exp(.x %*% .betas)) ^ (-1)
   p <- drop(p)
   res <- sum(.y * log(p) + (1L - .y) * log(1 - p))
-  return (res)
+  return(res)
 }
 
 #' 이분 로지스틱 회귀분석 로그우도함수의 gradient.
@@ -30,7 +30,7 @@ grad_binary_logistic_regression <- function(.betas, .x, .y) {
   q <- drop(q)
   dp <- (q / ((1 + q) ^ 2)) * .x
   res <- colSums((.y / p - (1 - .y) / (1 - p)) * dp)
-  return (res)
+  return(res)
 }
 
 
@@ -178,7 +178,7 @@ loglik_multinom_logistic_regression <- function(.betas, .x, .y, .reflevel) {
 
   res <- sum(log(p[y_matrix == 1L]))
 
-  return (res)
+  return(res)
 }
 
 
@@ -288,7 +288,7 @@ loglik_ordinal_logistic_regression <- function(.betas, .x, .y,
   if (.type == "cumulative") {
     kappa <- cbind(
       rep(0, n_obs),
-      1 / (exp(- .x %*% betas_mat) + 1),
+      1 / (exp(-.x %*% betas_mat) + 1),
       rep(1, n_obs)
     )
     p <- kappa[, -1] - kappa[, -(n_levels + 1)]
@@ -308,7 +308,7 @@ loglik_ordinal_logistic_regression <- function(.betas, .x, .y,
 
   res <- sum(log(p[y_matrix == 1L]))
 
-  return (res)
+  return(res)
 }
 
 
@@ -374,7 +374,7 @@ fit_ordinal_logistic_regression <- function(
     hessian = TRUE
   )
 
-  return (fit)
+  return(fit)
 }
 
 
