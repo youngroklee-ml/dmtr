@@ -6,7 +6,7 @@ test_that("binary logistic regression coefficient matches to book example", {
   )
 })
 
-test_that("", {
+test_that("binary logistic regression posterior matches to book example", {
   expect_equal(
     fit_binary_logistic_regression(student, y, x1:x3, .reflevel = "보통")[["betas"]] %>%
       posterior_binary_logistic_regression(student, x1:x3, .reflevel = "보통", .poslevel = "우수") %>%
@@ -16,3 +16,4 @@ test_that("", {
     tolerance = 1e-3
   )
 })
+
