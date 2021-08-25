@@ -134,13 +134,13 @@ posterior_binary_logistic_regression <- function(.betas, .new_data, .xvar,
     as.matrix()
 
   res <- dplyr::tibble(
-    positive = 1 - (1 + exp(X %*% betas)) ^ (-1),
+    positive = 1 - (1 + exp(drop(X %*% betas))) ^ (-1),
     negative = 1 - positive
   )
 
   names(res) <- stringr::str_c(".pred", c(.poslevel, .reflevel), sep = "_")
 
-  return (res)
+  return(res)
 }
 
 
