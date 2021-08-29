@@ -83,7 +83,7 @@ fit_binary_logistic_regression <- function(
 
   y <- .data %>%
     dplyr::transmute(..y = dplyr::if_else(!!.group_var == .reflevel, 0L, 1L)) %>%
-    dplyr::pull(..y)
+    dplyr::pull(.data$..y)
 
   fit <- stats::optim(
     betas,
