@@ -281,14 +281,14 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; $betas</span>
 <span class="co">#&gt; (Intercept)          x1          x2          x3 </span>
-<span class="co">#&gt;  -30.513301    2.031758    3.470918    2.414839 </span>
+<span class="co">#&gt;  -30.503186    2.029712    3.469865    2.413519 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $hessian</span>
 <span class="co">#&gt;             (Intercept)         x1         x2         x3</span>
-<span class="co">#&gt; (Intercept)  -1.6884801 -0.6964781 -12.652476  -2.595584</span>
-<span class="co">#&gt; x1           -0.6964781 -0.6964781  -5.001822  -1.031546</span>
-<span class="co">#&gt; x2          -12.6524765 -5.0018221 -96.041749 -17.994389</span>
-<span class="co">#&gt; x3           -2.5955837 -1.0315464 -17.994389  -6.458348</span></code></pre></div>
+<span class="co">#&gt; (Intercept)  -1.6890229 -0.6968632 -12.656007  -2.597510</span>
+<span class="co">#&gt; x1           -0.6968632 -0.6968632  -5.004253  -1.032986</span>
+<span class="co">#&gt; x2          -12.6560074 -5.0042528 -96.064775 -18.007024</span>
+<span class="co">#&gt; x3           -2.5975104 -1.0329856 -18.007024  -6.464796</span></code></pre></div>
 <p>위 추정계수와 헤시안 행렬(Hessian matrix)를 이용하여 아래와 같이 결과를 요약할 수 있다.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_summary_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
@@ -313,7 +313,7 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">-30.51</td>
+<td align="right">-30.50</td>
 <td align="right">18.02</td>
 <td align="right">-1.69</td>
 <td align="right">0.09</td>
@@ -325,15 +325,15 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">1.98</td>
 <td align="right">1.02</td>
 <td align="right">0.31</td>
-<td align="right">7.63</td>
+<td align="right">7.61</td>
 </tr>
 <tr class="odd">
 <td align="left">x2</td>
 <td align="right">3.47</td>
-<td align="right">2.08</td>
+<td align="right">2.07</td>
 <td align="right">1.67</td>
 <td align="right">0.09</td>
-<td align="right">32.17</td>
+<td align="right">32.13</td>
 </tr>
 <tr class="even">
 <td align="left">x3</td>
@@ -341,7 +341,7 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">1.40</td>
 <td align="right">1.73</td>
 <td align="right">0.08</td>
-<td align="right">11.19</td>
+<td align="right">11.17</td>
 </tr>
 </tbody>
 </table>
@@ -711,25 +711,25 @@ L &amp;=&amp; \prod_{i = 1}^{n} \frac{1}{1 + \sum_{j = 2}^{J} \exp \left( \beta_
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; $betas</span>
 <span class="co">#&gt;                     1          2</span>
-<span class="co">#&gt; (Intercept) -64.05315 -117.51586</span>
-<span class="co">#&gt; x1          102.01961  132.46226</span>
-<span class="co">#&gt; x2           10.77861   20.70268</span>
+<span class="co">#&gt; (Intercept) -64.32426 -117.86803</span>
+<span class="co">#&gt; x1          102.37712  132.92309</span>
+<span class="co">#&gt; x2           10.82577   20.76368</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $hessian</span>
 <span class="co">#&gt;               (Intercept):1        x1:1       x2:1 (Intercept):2        x1:2</span>
-<span class="co">#&gt; (Intercept):1    -3.9783037 -0.41883991 -19.916931     1.9940070  0.21776307</span>
-<span class="co">#&gt; x1:1             -0.4188399 -0.04457545  -2.096096     0.2177631  0.02399252</span>
-<span class="co">#&gt; x2:1            -19.9169309 -2.09609559 -99.734215    10.0380915  1.09551999</span>
-<span class="co">#&gt; (Intercept):2     1.9940070  0.21776308  10.038091    -2.8619860 -0.30625616</span>
-<span class="co">#&gt; x1:2              0.2177631  0.02399252   1.095520    -0.3062562 -0.03310140</span>
-<span class="co">#&gt; x2:2             10.0380984  1.09552077  50.545966   -14.3844255 -1.53842164</span>
+<span class="co">#&gt; (Intercept):1    -3.9766342 -0.41867389 -19.908686     1.9945437  0.21783241</span>
+<span class="co">#&gt; x1:1             -0.4186739 -0.04455867  -2.095275     0.2178324  0.02400119</span>
+<span class="co">#&gt; x2:1            -19.9086864 -2.09527543 -99.693495    10.0408169  1.09586998</span>
+<span class="co">#&gt; (Intercept):2     1.9945437  0.21783242  10.040817    -2.8599624 -0.30606140</span>
+<span class="co">#&gt; x1:2              0.2178324  0.02400119   1.095870    -0.3060614 -0.03308252</span>
+<span class="co">#&gt; x2:2             10.0408238  1.09587076  50.559809   -14.3742848 -1.53744502</span>
 <span class="co">#&gt;                     x2:2</span>
-<span class="co">#&gt; (Intercept):1  10.038098</span>
-<span class="co">#&gt; x1:1            1.095521</span>
-<span class="co">#&gt; x2:1           50.545966</span>
-<span class="co">#&gt; (Intercept):2 -14.384425</span>
-<span class="co">#&gt; x1:2           -1.538422</span>
-<span class="co">#&gt; x2:2          -72.313648</span></code></pre></div>
+<span class="co">#&gt; (Intercept):1  10.040824</span>
+<span class="co">#&gt; x1:1            1.095871</span>
+<span class="co">#&gt; x2:1           50.559809</span>
+<span class="co">#&gt; (Intercept):2 -14.374285</span>
+<span class="co">#&gt; x1:2           -1.537445</span>
+<span class="co">#&gt; x2:2          -72.262823</span></code></pre></div>
 </div>
 </div>
 <div id="ordinal-logistic-regression" class="section level1" number="3">
@@ -851,14 +851,14 @@ L &amp;=&amp; \prod_{i = 1}^{n} \frac{1}{1 + \sum_{j = 2}^{J} \exp \left( \beta_
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; $par</span>
-<span class="co">#&gt; [1] -13.0370640 -11.4013262   0.2236778   0.2998281</span>
+<span class="co">#&gt; [1] -13.0333724 -11.3971534   0.2235671   0.2998596</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $value</span>
-<span class="co">#&gt; [1] -6.441255</span>
+<span class="co">#&gt; [1] -6.441253</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $counts</span>
 <span class="co">#&gt; function gradient </span>
-<span class="co">#&gt;      453       NA </span>
+<span class="co">#&gt;      619       NA </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $convergence</span>
 <span class="co">#&gt; [1] 0</span>
@@ -868,10 +868,10 @@ L &amp;=&amp; \prod_{i = 1}^{n} \frac{1}{1 + \sum_{j = 2}^{J} \exp \left( \beta_
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $hessian</span>
 <span class="co">#&gt;             [,1]        [,2]        [,3]       [,4]</span>
-<span class="co">#&gt; [1,]  -1.3671107   0.6009527   -24.20673  -15.81255</span>
-<span class="co">#&gt; [2,]   0.6009527  -1.4689220   -27.54775  -12.06736</span>
-<span class="co">#&gt; [3,] -24.2067289 -27.5477519 -1706.51061 -843.04924</span>
-<span class="co">#&gt; [4,] -15.8125455 -12.0673638  -843.04924 -559.82276</span></code></pre></div>
+<span class="co">#&gt; [1,]  -1.3665648   0.6005237   -24.20280  -15.80894</span>
+<span class="co">#&gt; [2,]   0.6005237  -1.4685802   -27.55031  -12.06635</span>
+<span class="co">#&gt; [3,] -24.2027993 -27.5503100 -1706.45224 -842.92052</span>
+<span class="co">#&gt; [4,] -15.8089401 -12.0663502  -842.92052 -559.64695</span></code></pre></div>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-czepiel2002maximum" class="csl-entry">
 Czepiel, Scott A. 2002. <span>“Maximum Likelihood Estimation of Logistic Regression Models: Theory and Implementation.”</span> <em>Available at Czep. Net/Stat/Mlelr. Pdf</em>.
