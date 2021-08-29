@@ -90,7 +90,7 @@ fisher_ld_prediction <- function(.w, .z, .newdata, .xvar, .levels = c(1L, 2L)) {
     dplyr::rowwise() %>%
     dplyr::mutate(
       z = crossprod(c(!!.xvar), .w),
-      .pred_class = dplyr::if_else(z > .z, .levels[1], .levels[2])
+      .pred_class = dplyr::if_else(.data$z > .z, .levels[1], .levels[2])
     )
 }
 
@@ -217,8 +217,8 @@ predict_da <- function(.f, .new_data, .xvar,
   u_df <- score_da(.f, .new_data, !!.xvar)
 
   p_df <- u_df %>%
-    dplyr::mutate_all(exp) %>%
-    dplyr::mutate_all(function(x) x / rowSums(.))
+    dplyr::mutate(dplyr::across(tidyselect::everything(), exp)) %>%
+    dplyr::mutate(dplyr::across(tidyselect::everything(), function(x) x / rowSums(.)))
 
   names(p_df) <- stringr::str_c(".pred", attr(.f, "group"), sep = "_")
 

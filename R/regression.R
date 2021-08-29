@@ -182,11 +182,11 @@ anova_linear_regression <- function(.fit) {
   ) %>%
     dplyr::mutate(
       ms = dplyr::if_else(
-        dplyr::row_number() %in% c(1, 2), ss / df, NA_real_),
+        dplyr::row_number() %in% c(1, 2), .data$ss / .data$df, NA_real_),
       F_statistic = dplyr::if_else(
         dplyr::row_number() == 1,
-        ms / dplyr::lead(ms), NA_real_),
-      p_value = 1 - stats::pf(F_statistic, .fit$n - 1 - .fit$df, .fit$df)
+        .data$ms / dplyr::lead(.data$ms), NA_real_),
+      p_value = 1 - stats::pf(.data$F_statistic, .fit$n - 1 - .fit$df, .fit$df)
     )
 }
 
