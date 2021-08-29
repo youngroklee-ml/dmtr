@@ -22,9 +22,10 @@ Imports:
     tibble,
     tidyselect
 Suggests: 
-    testthat (>= 2.1.0),
+    testthat (>= 3.0.0),
     knitr,
     rmarkdown,
     bookdown
 Depends: R (>= 4.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3
