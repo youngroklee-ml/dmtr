@@ -33,8 +33,10 @@ predict_linear_regression(
 data(biometric, package = "dmtr")
 fit <- fit_linear_regression(biometric, weight, c(age, height))
 predict_linear_regression(fit, biometric, c(age, height))
-predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, height), .ci_interval = 0.95)
-predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, height), .pi_interval = 0.95)
+predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170),
+  c(age, height), .ci_interval = 0.95)
+predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170),
+  c(age, height), .pi_interval = 0.95)
 
 }
 \keyword{regression}
