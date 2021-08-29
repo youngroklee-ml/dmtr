@@ -13,7 +13,7 @@ test_that("binary logistic regression posterior matches to book example", {
       dplyr::pull(`.pred_우수`),
     c(0.8895, 0.1458, 0.6746, 0.8811, 0.9840, 0.7367, 0.0020, 0.0053,
       0.2002, 0.4187, 0.0002, 0.3294, 0.0800, 0.6561, 0.0007),
-    tolerance = 1e-3
+    tolerance = 5e-3
   )
 })
 
