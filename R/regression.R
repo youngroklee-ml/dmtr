@@ -143,15 +143,15 @@ predict_linear_regression <- function(
     if (.ci_interval > 0) {
       res <- res %>%
         dplyr::mutate(
-          .ci_lower = .pred + qt(0.5 - .ci_interval / 2, .fit$df) * .se,
-          .ci_upper = .pred + qt(0.5 + .ci_interval / 2, .fit$df) * .se
+          .ci_lower = .data$.pred + stats::qt(0.5 - .ci_interval / 2, .fit$df) * .data$.se,
+          .ci_upper = .data$.pred + stats::qt(0.5 + .ci_interval / 2, .fit$df) * .data$.se
         )
     }
     if (.pi_interval > 0) {
       res <- res %>%
         dplyr::mutate(
-          .pi_lower = .pred + qt(0.5 - .pi_interval / 2, .fit$df) * sqrt(.fit$mse + .se ^ 2),
-          .pi_upper = .pred + qt(0.5 + .pi_interval / 2, .fit$df) * sqrt(.fit$mse + .se ^ 2)
+          .pi_lower = .data$.pred + stats::qt(0.5 - .pi_interval / 2, .fit$df) * sqrt(.fit$mse + .data$.se ^ 2),
+          .pi_upper = .data$.pred + stats::qt(0.5 + .pi_interval / 2, .fit$df) * sqrt(.fit$mse + .data$.se ^ 2)
         )
     }
   }
@@ -210,8 +210,8 @@ ttest_linear_regression <- function(.fit) {
     term = names(.fit$betas),
     estimate = .fit$betas,
     std_error = .fit$se,
-    t_statistic = estimate / std_error,
-    p_value = stats::pt( - abs(t_statistic), .fit$df) * 2
+    t_statistic = .data$estimate / .data$std_error,
+    p_value = stats::pt(-abs(.data$t_statistic), .fit$df) * 2
   )
 }
 
@@ -372,8 +372,8 @@ select_variables_stepwise <- function(.data, .yvar, .xvar,
     variables,
     ~ test_type2_linear_regression(.data, !!.yvar, .x)
   ) %>%
-    dplyr::slice_max(ss, n = 1L, with_ties = FALSE) %>%
-    dplyr::filter(p_value < .alpha_in)
+    dplyr::slice_max(.data$ss, n = 1L, with_ties = FALSE) %>%
+    dplyr::filter(.data$p_value < .alpha_in)
 
   if (nrow(res_addition) == 0L) {
     cat("No variable gives statistically significant improvement of the fit.\n")
@@ -406,8 +406,8 @@ select_variables_stepwise <- function(.data, .yvar, .xvar,
       ~ test_type2_linear_regression(.data, !!.yvar, c(variables_in_model, .x),
                                      .last_only = TRUE)
     ) %>%
-      dplyr::slice_max(ss, n = 1L, with_ties = FALSE) %>%
-      dplyr::filter(p_value < .alpha_in)
+      dplyr::slice_max(.data$ss, n = 1L, with_ties = FALSE) %>%
+      dplyr::filter(.data$p_value < .alpha_in)
 
     if (nrow(res_addition) == 0) {
       if (.verbose) {
@@ -428,8 +428,8 @@ select_variables_stepwise <- function(.data, .yvar, .xvar,
     }
 
     res_elimination <- test_type2_linear_regression(.data, !!.yvar, variables_in_model) %>%
-      dplyr::slice_min(ss, n = 1L, with_ties = FALSE) %>%
-      dplyr::filter(p_value > .alpha_out)
+      dplyr::slice_min(.data$ss, n = 1L, with_ties = FALSE) %>%
+      dplyr::filter(.data$p_value > .alpha_out)
 
     if (nrow(res_elimination) == 0) {
       if (.verbose) {
