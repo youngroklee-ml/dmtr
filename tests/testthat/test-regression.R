@@ -33,3 +33,15 @@ test_that("multiple regression prediction interval", {
     tolerance = 1e-3
   )
 })
+
+test_that("multiple regression t-test matches to book example", {
+  expect_equal(
+    rollsteel %>%
+      dplyr::mutate(D = factor_to_matrix(.data$thickness, .reflevel = 6)) %>%
+      fit_linear_regression(.yvar = ts, .xvar = c(ct, D)) %>%
+      ttest_linear_regression() %>%
+      dplyr::pull(t_statistic),
+    c(`(Intercept)` = 86.9, ct = -15.4, D = 5.4),
+    tolerance = 1e-2
+  )
+})
