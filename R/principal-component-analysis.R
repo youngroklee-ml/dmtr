@@ -82,7 +82,7 @@ fit_pca <- function(.data, .xvar = everything(), .pc = NULL, .center = TRUE, .sc
   Xpc <- nipals_pca(X, .pc)
   ncomp <- ncol(Xpc[["V"]])
 
-  pc_eigen <- sqrt(colSums(Xpc[["T"]] ** 2))
+  pc_eigen <- colSums(Xpc[["T"]] ** 2) / col_ss[seq_len(ncomp)]
   pc_col_ss <- colSums(Xpc[["T"]] ** 2)
   pc_total_ss <- sum(pc_col_ss)
 
