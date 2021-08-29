@@ -17,3 +17,4 @@ eval_mad(.y, .y_hat)
 \description{
 예측값의 평균절대오차를 계산한다.
 }
+\keyword{evaluation-metrics}

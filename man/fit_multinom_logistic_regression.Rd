@@ -36,3 +36,4 @@ fit <- fit_multinom_logistic_regression(defecttype, y, c(x1, x2), .reflevel = 3L
   .control = list(fnscale = -1, reltol = 1e-10, maxit = 100000))
 
 }
+\keyword{logistic-regression}

@@ -25,3 +25,4 @@ f <- ld_fun(binaryclass2, class, c(x1, x2))
 score_da(f, binaryclass2, c(x1, x2))
 
 }
+\keyword{discriminant-functions}

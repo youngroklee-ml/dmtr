@@ -36,3 +36,4 @@ posterior_binary_logistic_regression(fit$betas, student, c(x1, x2, x3),
   .reflevel = "보통", .poslevel = "우수")
 
 }
+\keyword{logistic-regression}

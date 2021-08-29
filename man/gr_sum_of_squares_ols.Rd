@@ -19,3 +19,4 @@ gr_sum_of_squares_ols(.beta, .x, .y)
 \description{
 회귀제곱합을 회귀계수에 대한 함수라 할 때, 각 회귀계수에 대하여 편미분한 함수의 값을 주어진 회귀계수에 대하여 계산한다.
 }
+\keyword{regression}

@@ -17,3 +17,4 @@ nipals_pca(X, .pc = NULL)
 \description{
 NIPALS 알고리즘을 이용하여 주성분 스코어 행렬과 고유벡터행렬을 구한다.
 }
+\keyword{principal-component-analysis}

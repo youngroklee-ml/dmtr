@@ -35,3 +35,4 @@ data(student, package = "dmtr")
 fit_binary_logistic_regression(student, y, c(x1, x2, x3), .reflevel = "우수")
 
 }
+\keyword{logistic-regression}

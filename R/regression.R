@@ -6,6 +6,8 @@
 #' @param .x 독립변수 행렬.
 #' @param .y 종속변수 벡터.
 #' @return 회귀제곱합.
+#'
+#' @keywords regression
 fn_sum_of_squares_ols <- function(.beta, .x, .y) {
   beta <- matrix(.beta, ncol = 1)
   sum((.y - (.x %*% beta)) ^ 2)
@@ -19,6 +21,8 @@ fn_sum_of_squares_ols <- function(.beta, .x, .y) {
 #' @param .x 독립변수 행렬.
 #' @param .y 종속변수 벡터.
 #' @return 회귀제곱합 편미분값.
+#'
+#' @keywords regression
 gr_sum_of_squares_ols <- function(.beta, .x, .y) {
   beta <- matrix(.beta, ncol = 1)
   drop(-2 * t(.x) %*% (.y - (.x %*% beta)))
@@ -40,6 +44,7 @@ gr_sum_of_squares_ols <- function(.beta, .x, .y) {
 #' data(biometric, package = "dmtr")
 #' fit <- fit_linear_regression(biometric, weight, c(age, height))
 #'
+#' @keywords regression
 #' @export
 fit_linear_regression <- function(.data, .yvar, .xvar) {
   .yvar <- rlang::enquo(.yvar)
@@ -106,6 +111,7 @@ fit_linear_regression <- function(.data, .yvar, .xvar) {
 #' predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, height), .ci_interval = 0.95)
 #' predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, height), .pi_interval = 0.95)
 #'
+#' @keywords regression
 #' @export
 predict_linear_regression <- function(
   .fit,
@@ -164,6 +170,7 @@ predict_linear_regression <- function(
 #' fit <- fit_linear_regression(biometric, weight, c(age, height))
 #' anova_linear_regression(fit)
 #'
+#' @keywords regression
 #' @export
 anova_linear_regression <- function(.fit) {
   dplyr::tibble(
@@ -194,6 +201,7 @@ anova_linear_regression <- function(.fit) {
 #' fit <- fit_linear_regression(biometric, weight, c(age, height))
 #' ttest_linear_regression(fit)
 #'
+#' @keywords regression
 #' @export
 ttest_linear_regression <- function(.fit) {
   dplyr::tibble(
@@ -220,6 +228,7 @@ ttest_linear_regression <- function(.fit) {
 #' fit_reduced <- fit_linear_regression(biometric, weight, height)
 #' mallows_c(fit_reduced, fit_full)
 #'
+#' @keywords regression
 #' @export
 mallows_c <- function(.fit_reduced, .fit_full) {
   (.fit_reduced$mse * .fit_reduced$df) / .fit_full$mse -
@@ -240,6 +249,7 @@ mallows_c <- function(.fit_reduced, .fit_full) {
 #' data(biometric, package = "dmtr")
 #' evaluate_linear_regression(biometric, weight, c(age, height))
 #'
+#' @keywords regression
 #' @export
 evaluate_linear_regression <- function(.data, .yvar, .xvar) {
   variables <- tidyselect::eval_select(rlang::enquo(.xvar), .data) %>% names()
@@ -288,6 +298,7 @@ evaluate_linear_regression <- function(.data, .yvar, .xvar) {
 #' data(biometric, package = "dmtr")
 #' test_type2_linear_regression(biometric, weight, c(age, height))
 #'
+#' @keywords regression
 #' @export
 test_type2_linear_regression <- function(.data, .yvar, .xvar, .last_only = FALSE) {
   .xvar <- rlang::enquo(.xvar)
@@ -342,6 +353,7 @@ test_type2_linear_regression <- function(.data, .yvar, .xvar, .last_only = FALSE
 #' data(biometric, package = "dmtr")
 #' select_variables_stepwise(biometric, weight, c(age, height))
 #'
+#' @keywords regression
 #' @export
 select_variables_stepwise <- function(.data, .yvar, .xvar,
                              .alpha_in = 0.05, .alpha_out = 0.10, .maxit = 100L,
@@ -457,6 +469,7 @@ select_variables_stepwise <- function(.data, .yvar, .xvar,
 #' data(biometric, package = "dmtr")
 #' vif_linear_regression(biometric, c(age, height))
 #'
+#' @keywords regression
 #' @export
 vif_linear_regression <- function(.data, .xvar) {
   .xvar <- rlang::enquo(.xvar)

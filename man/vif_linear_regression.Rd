@@ -22,3 +22,4 @@ data(biometric, package = "dmtr")
 vif_linear_regression(biometric, c(age, height))
 
 }
+\keyword{regression}

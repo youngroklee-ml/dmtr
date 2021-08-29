@@ -22,3 +22,4 @@ Each variable needs to be a numeric column of \code{.data}.}
 각 범주별 데이터 분석을 위한 nested data frame을 만든다. \code{group_nest} returns nested
 data frame that each row represents variable within each group.
 }
+\keyword{within-group}

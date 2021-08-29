@@ -23,3 +23,4 @@ normalize_to_prob(x)
 normalize_to_prob(x, small_p = 0)
 
 }
+\keyword{feature-utils}

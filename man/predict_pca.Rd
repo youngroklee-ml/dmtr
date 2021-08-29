@@ -23,3 +23,4 @@ fit <- fit_pca(biometric, .pc = 2L)
 predict_pca(fit, biometric)
 
 }
+\keyword{principal-component-analysis}

@@ -22,3 +22,4 @@ loglik_multinom_logistic_regression(.betas, .x, .y, .reflevel)
 \description{
 주어진 계수로부터 관측 데이터가 얻어질 우도함수값을 계산한다.
 }
+\keyword{logistic-regression}

@@ -24,3 +24,4 @@ factor_to_matrix(x)
 factor_to_matrix(x, .reflevel = 3L)
 
 }
+\keyword{feature-utils}

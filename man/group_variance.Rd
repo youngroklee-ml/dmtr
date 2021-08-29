@@ -35,3 +35,4 @@ data(binaryclass2, package = "dmtr")
 group_variance(binaryclass2, class, c(x1, x2))
 
 }
+\keyword{within-group}

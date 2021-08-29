@@ -34,3 +34,4 @@ data(binaryclass2, package = "dmtr")
 group_mean(binaryclass2, class, c(x1, x2))
 
 }
+\keyword{within-group}

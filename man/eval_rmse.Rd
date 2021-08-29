@@ -17,3 +17,4 @@ eval_rmse(.y, .y_hat)
 \description{
 예측값의 평균제곱오차의 제곱근을 계산한다.
 }
+\keyword{evaluation-metrics}

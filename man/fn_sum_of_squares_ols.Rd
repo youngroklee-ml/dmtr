@@ -19,3 +19,4 @@ fn_sum_of_squares_ols(.beta, .x, .y)
 \description{
 주어진 회귀계수로부터 관측 데이터에 대한 회귀제곱합을 계산한다.
 }
+\keyword{regression}

@@ -19,3 +19,4 @@ nipals_plsr(X, y, ncomp = NULL)
 \description{
 NIPALS 알고리즘을 이용하여 부분최소자승 회귀모형을 구한다.
 }
+\keyword{partial-least-squares}

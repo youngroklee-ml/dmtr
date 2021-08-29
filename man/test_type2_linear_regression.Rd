@@ -26,3 +26,4 @@ data(biometric, package = "dmtr")
 test_type2_linear_regression(biometric, weight, c(age, height))
 
 }
+\keyword{regression}

@@ -30,3 +30,4 @@ data(biometric, package = "dmtr")
 fit <- fit_pcr(biometric, weight, c(age, height), .pc = 1L)
 
 }
+\keyword{principal-component-analysis}

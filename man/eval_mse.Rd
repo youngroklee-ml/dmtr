@@ -17,3 +17,4 @@ eval_mse(.y, .y_hat)
 \description{
 예측값의 평균제곱오차를 계산한다.
 }
+\keyword{evaluation-metrics}

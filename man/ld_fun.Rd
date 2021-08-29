@@ -26,3 +26,4 @@ data(binaryclass2, package = "dmtr")
 f <- ld_fun(binaryclass2, class, c(x1, x2))
 
 }
+\keyword{discriminant-functions}

@@ -21,3 +21,4 @@ fit <- fit_linear_regression(biometric, weight, c(age, height))
 ttest_linear_regression(fit)
 
 }
+\keyword{regression}

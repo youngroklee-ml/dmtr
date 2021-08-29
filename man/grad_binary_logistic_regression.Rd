@@ -19,3 +19,4 @@ grad_binary_logistic_regression(.betas, .x, .y)
 \description{
 주어진 계수에서 우도함수의 편미분값을 계산한다.
 }
+\keyword{logistic-regression}

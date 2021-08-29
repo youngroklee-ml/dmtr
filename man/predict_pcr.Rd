@@ -25,3 +25,4 @@ fit <- fit_pcr(biometric, weight, c(age, height), .pc = 1L)
 predict_pcr(fit, biometric)
 
 }
+\keyword{principal-component-analysis}

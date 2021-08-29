@@ -6,6 +6,8 @@
 #' @param .x 독립변수 행렬.
 #' @param .y 종속변수 벡터.
 #' @return 로그우도함수값.
+#'
+#' @keywords logistic-regression
 loglik_binary_logistic_regression <- function(.betas, .x, .y) {
   .betas <- matrix(.betas, ncol = 1L)
   p <- 1 - (1 + exp(.x %*% .betas)) ^ (-1)
@@ -22,6 +24,8 @@ loglik_binary_logistic_regression <- function(.betas, .x, .y) {
 #' @param .x 독립변수 행렬.
 #' @param .y 종속변수 벡터.
 #' @return 편미분값 벡터.
+#'
+#' @keywords logistic-regression
 grad_binary_logistic_regression <- function(.betas, .x, .y) {
   .betas <- matrix(.betas, ncol = 1L)
   p <- 1 - (1 + exp(.x %*% .betas)) ^ (-1)
@@ -51,6 +55,7 @@ grad_binary_logistic_regression <- function(.betas, .x, .y) {
 #' data(student, package = "dmtr")
 #' fit_binary_logistic_regression(student, y, c(x1, x2, x3), .reflevel = "우수")
 #'
+#' @keywords logistic-regression
 #' @export
 fit_binary_logistic_regression <- function(
   .data, .group_var, .xvar, .reflevel = NULL,
@@ -121,6 +126,7 @@ fit_binary_logistic_regression <- function(
 #' posterior_binary_logistic_regression(fit$betas, student, c(x1, x2, x3),
 #'   .reflevel = "보통", .poslevel = "우수")
 #'
+#' @keywords logistic-regression
 #' @export
 posterior_binary_logistic_regression <- function(.betas, .new_data, .xvar,
   .reflevel = 0L, .poslevel = 1L) {
@@ -154,6 +160,8 @@ posterior_binary_logistic_regression <- function(.betas, .new_data, .xvar,
 #' @param .y 종속변수 벡터.
 #' @param .reflevel 기준범주 값.
 #' @return 로그우도함수값.
+#'
+#' @keywords logistic-regression
 loglik_multinom_logistic_regression <- function(.betas, .x, .y, .reflevel) {
   all_levels <- levels(.y)
   n_levels <- length(all_levels)
@@ -199,6 +207,7 @@ loglik_multinom_logistic_regression <- function(.betas, .x, .y, .reflevel) {
 #' fit <- fit_multinom_logistic_regression(defecttype, y, c(x1, x2), .reflevel = 3L,
 #'   .control = list(fnscale = -1, reltol = 1e-10, maxit = 100000))
 #'
+#' @keywords logistic-regression
 #' @export
 fit_multinom_logistic_regression <- function(
   .data, .group_var, .xvar, .reflevel = NULL,
@@ -269,6 +278,8 @@ fit_multinom_logistic_regression <- function(
 #' @param .y 종속변수 벡터.
 #' @param .type 로짓모형의 종류. "cumulative": 누적 로짓모형, "adjacent": 인근범주 로짓모형
 #' @return 로그우도함수값.
+#'
+#' @keywords logistic-regression
 loglik_ordinal_logistic_regression <- function(.betas, .x, .y,
   .type = "cumulative") {
   all_levels <- levels(.y)
@@ -332,6 +343,7 @@ loglik_ordinal_logistic_regression <- function(.betas, .x, .y,
 #'   telconnection, y, c(N, L), .type = "adjacent"
 #' )
 #'
+#' @keywords logistic-regression
 #' @export
 fit_ordinal_logistic_regression <- function(
   .data, .group_var, .xvar, .type = "cumulative",

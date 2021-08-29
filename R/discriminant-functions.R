@@ -11,6 +11,7 @@
 #' data(binaryclass2, package = "dmtr")
 #' fisher_ld(binaryclass2, class, c(x1, x2))
 #'
+#' @keywords discriminant-functions
 #' @export
 fisher_ld <- function(.data, .group_var, .xvar) {
   .group_var <- rlang::enquo(.group_var)
@@ -48,6 +49,7 @@ fisher_ld <- function(.data, .group_var, .xvar) {
 #' data(binaryclass2, package = "dmtr")
 #' fisher_ld_threshold(binaryclass2, class, c(x1, x2))
 #'
+#' @keywords discriminant-functions
 #' @export
 fisher_ld_threshold <- function(.data, .group_var, .xvar) {
   .group_var <- rlang::enquo(.group_var)
@@ -73,6 +75,7 @@ fisher_ld_threshold <- function(.data, .group_var, .xvar) {
 #' @param .levels 범주.
 #' @return 분류 예측값을 포함한 데이터 프레임.
 #'
+#' @keywords discriminant-functions
 #' @examples
 #' data(binaryclass2, package = "dmtr")
 #' w <- fisher_ld(binaryclass2, class, c(x1, x2))
@@ -102,6 +105,7 @@ fisher_ld_prediction <- function(.w, .z, .newdata, .xvar, .levels = c(1L, 2L)) {
 #' @param .prior 범주 사전 확률. NULL일 때는 데이터 프레임 \code{.data}내의 각 범주의 비율을 사전확률로 추정.  default: NULL
 #' @return 범주별 판별 함수.
 #'
+#' @keywords discriminant-functions
 #' @examples
 #' data(binaryclass2, package = "dmtr")
 #' f <- ld_fun(binaryclass2, class, c(x1, x2))
@@ -156,6 +160,7 @@ ld_fun <- function(.data, .group_var, .xvar, .prior = NULL) {
 #' f <- ld_fun(binaryclass2, class, c(x1, x2))
 #' score_da(f, binaryclass2, c(x1, x2))
 #'
+#' @keywords discriminant-functions
 #' @export
 score_da <- function(.f, .new_data, .xvar) {
   .xvar <- rlang::enquo(.xvar)
@@ -195,6 +200,7 @@ score_da <- function(.f, .new_data, .xvar) {
 #' f <- ld_fun(binaryclass2, class, c(x1, x2))
 #' predict_da(f, binaryclass2, c(x1, x2), .include_posterior = TRUE)
 #'
+#' @keywords discriminant-functions
 #' @export
 predict_da <- function(.f, .new_data, .xvar,
   .include_score = FALSE,
@@ -243,6 +249,7 @@ predict_da <- function(.f, .new_data, .xvar,
 #' data(binaryclass2, package = "dmtr")
 #' f <- qd_fun(binaryclass2, class, c(x1, x2))
 #'
+#' @keywords discriminant-functions
 #' @export
 qd_fun <- function(.data, .group_var, .xvar, .prior = NULL) {
   .group_var <- rlang::enquo(.group_var)

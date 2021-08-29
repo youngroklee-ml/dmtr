@@ -24,3 +24,4 @@ fit_reduced <- fit_linear_regression(biometric, weight, height)
 mallows_c(fit_reduced, fit_full)
 
 }
+\keyword{regression}

@@ -29,3 +29,4 @@ data(binaryclass2, package = "dmtr")
 group_summary(binaryclass2, class, c(x1, x2))
 
 }
+\keyword{within-group}

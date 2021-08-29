@@ -7,6 +7,7 @@
 #' @param ncomp 추출할 잠재변수 개수.
 #' @return 리스트. \code{T}: 스코어 행렬, \code{W}: 가중치 행렬, \code{P}: 로딩행렬, \code{b} 회귀계수.
 #'
+#' @keywords partial-least-squares
 #' @export
 nipals_plsr <- function(X, y, ncomp = NULL) {
   if (rlang::is_empty(ncomp) || (ncomp > min(dim(X)))) {
@@ -60,6 +61,7 @@ nipals_plsr <- function(X, y, ncomp = NULL) {
 #' @param ncomp 추출할 잠재변수 개수.
 #' @return 리스트.
 #'
+#' @keywords partial-least-squares
 #' @export
 nipals_plsr_n <- function(X, Y, ncomp = NULL) {
   if (nrow(X) != nrow(Y)) stop("X and Y must have the same numbers of observations.")
@@ -145,6 +147,7 @@ nipals_plsr_n <- function(X, Y, ncomp = NULL) {
 #' data(biometric, package = "dmtr")
 #' fit <- fit_plsr(biometric, weight, c(age, height), .ncomp = 1L)
 #'
+#' @keywords partial-least-squares
 #' @export
 fit_plsr <- function(.data, .yvar, .xvar, .ncomp = NULL, .center = TRUE, .scale = TRUE) {
   .xvar <- rlang::enquo(.xvar)

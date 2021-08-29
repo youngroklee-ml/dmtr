@@ -39,3 +39,4 @@ fit_ordinal_logistic_regression(
 )
 
 }
+\keyword{logistic-regression}

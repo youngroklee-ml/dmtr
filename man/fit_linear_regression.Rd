@@ -26,3 +26,4 @@ data(biometric, package = "dmtr")
 fit <- fit_linear_regression(biometric, weight, c(age, height))
 
 }
+\keyword{regression}

@@ -40,3 +40,4 @@ data(biometric, package = "dmtr")
 select_variables_stepwise(biometric, weight, c(age, height))
 
 }
+\keyword{regression}

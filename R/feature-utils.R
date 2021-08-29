@@ -12,6 +12,7 @@
 #' factor_to_matrix(x)
 #' factor_to_matrix(x, .reflevel = 3L)
 #'
+#' @keywords feature-utils
 #' @export
 factor_to_matrix <- function(x, .reflevel = NULL) {
   n_obs <- length(x)
@@ -47,6 +48,7 @@ factor_to_matrix <- function(x, .reflevel = NULL) {
 #' normalize_to_prob(x)
 #' normalize_to_prob(x, small_p = 0)
 #'
+#' @keywords feature-utils
 #' @export
 normalize_to_prob <- function(p, small_p = NULL) {
   if (any(p < 0)) stop("All elements of p must be non-negative.")

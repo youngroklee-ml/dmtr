@@ -38,3 +38,4 @@ f <- ld_fun(binaryclass2, class, c(x1, x2))
 predict_da(f, binaryclass2, c(x1, x2), .include_posterior = TRUE)
 
 }
+\keyword{discriminant-functions}

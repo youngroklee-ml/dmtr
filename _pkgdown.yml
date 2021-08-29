@@ -1,0 +1,25 @@
+reference:
+- title: "데이터"
+  desc: "교재 예제 데이터"
+- contents:
+  - has_keyword("datasets")
+- title: "판별분석"
+- contents:
+  - has_keyword("discriminant-functions")
+- title: "로지스틱 회귀분석"
+- contents:
+  - has_keyword("logistic-regression")
+- title: "회귀분석"
+- contents:
+  - has_keyword("regression")
+- title: "주성분분석"
+- contents:
+  - has_keyword("principal-component-analysis")
+- title: "부분최소자승 회귀분석"
+- contents:
+  - has_keyword("partial-least-squares")
+- title: "기타 함수들"
+- contents:
+  - has_keyword("within-group")
+  - has_keyword("feature-utils")
+  - has_keyword("evaluation-metrics")

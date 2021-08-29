@@ -7,6 +7,7 @@
 #' @param .pc 추출할 주성분의 수.
 #' @return 리스트. \code{T}: 스코어 행렬, \code{V}: 고유벡터 행렬.
 #'
+#' @keywords principal-component-analysis
 #' @export
 nipals_pca <- function(X, .pc = NULL) {
   if (rlang::is_empty(.pc) || (.pc > min(dim(X)))) {
@@ -53,6 +54,7 @@ nipals_pca <- function(X, .pc = NULL) {
 #' fit1 <- fit_pca(biometric, c(age, height, weight), .pc = 2L)
 #' fit2 <- fit_pca(biometric, .pc = 2L)
 #'
+#' @keywords principal-component-analysis
 #' @export
 fit_pca <- function(.data, .xvar = everything(), .pc = NULL, .center = TRUE, .scale = TRUE) {
   .xvar <- rlang::enquo(.xvar)
@@ -114,6 +116,7 @@ fit_pca <- function(.data, .xvar = everything(), .pc = NULL, .center = TRUE, .sc
 #' fit <- fit_pca(biometric, .pc = 2L)
 #' predict_pca(fit, biometric)
 #'
+#' @keywords principal-component-analysis
 #' @export
 predict_pca <- function(.fit, .new_data) {
   .xvar <- rownames(.fit$loadings)
@@ -146,6 +149,7 @@ predict_pca <- function(.fit, .new_data) {
 #' data(biometric, package = "dmtr")
 #' fit <- fit_pcr(biometric, weight, c(age, height), .pc = 1L)
 #'
+#' @keywords principal-component-analysis
 #' @export
 fit_pcr <- function(.data, .yvar, .xvar, .pc = NULL, .center = TRUE, .scale = TRUE) {
   .xvar <- rlang::enquo(.xvar)
@@ -163,7 +167,7 @@ fit_pcr <- function(.data, .yvar, .xvar, .pc = NULL, .center = TRUE, .scale = TR
 
   res <- c(pc_fit, lm_fit)
 
-  intercept <- ((- t(pc_fit$center / pc_fit$scale) %*% pc_fit$loadings) %*%
+  intercept <- ((-t(pc_fit$center / pc_fit$scale) %*% pc_fit$loadings) %*%
     lm_fit$betas[colnames(pc_fit$loadings)]) %>%
     `+`(lm_fit$betas["(Intercept)"]) %>%
     drop()
@@ -191,6 +195,7 @@ fit_pcr <- function(.data, .yvar, .xvar, .pc = NULL, .center = TRUE, .scale = TR
 #' fit <- fit_pcr(biometric, weight, c(age, height), .pc = 1L)
 #' predict_pcr(fit, biometric)
 #'
+#' @keywords principal-component-analysis
 #' @export
 predict_pcr <- function(.fit, .new_data, ...) {
   predicted_score <- predict_pca(.fit, .new_data)

@@ -37,3 +37,4 @@ predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, hei
 predict_linear_regression(fit, dplyr::tibble(age = 40, height = 170), c(age, height), .pi_interval = 0.95)
 
 }
+\keyword{regression}

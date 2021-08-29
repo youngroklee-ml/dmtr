@@ -30,3 +30,4 @@ z <- fisher_ld_threshold(binaryclass2, class, c(x1, x2))
 pred <- fisher_ld_prediction(w, z, binaryclass2, c(x1, x2), .levels = attr(w, "group"))
 
 }
+\keyword{discriminant-functions}

@@ -32,3 +32,4 @@ fit1 <- fit_pca(biometric, c(age, height, weight), .pc = 2L)
 fit2 <- fit_pca(biometric, .pc = 2L)
 
 }
+\keyword{principal-component-analysis}

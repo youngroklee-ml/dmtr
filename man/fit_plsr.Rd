@@ -30,3 +30,4 @@ data(biometric, package = "dmtr")
 fit <- fit_plsr(biometric, weight, c(age, height), .ncomp = 1L)
 
 }
+\keyword{partial-least-squares}
