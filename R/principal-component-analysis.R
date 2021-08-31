@@ -56,7 +56,7 @@ nipals_pca <- function(X, .pc = NULL) {
 #'
 #' @keywords principal-component-analysis
 #' @export
-fit_pca <- function(.data, .xvar = everything(), .pc = NULL, .center = TRUE, .scale = TRUE) {
+fit_pca <- function(.data, .xvar = tidyselect::everything(), .pc = NULL, .center = TRUE, .scale = TRUE) {
   .xvar <- rlang::enquo(.xvar)
   variables <- tidyselect::eval_select(.xvar, .data) %>% names()
 
@@ -199,7 +199,7 @@ fit_pcr <- function(.data, .yvar, .xvar, .pc = NULL, .center = TRUE, .scale = TR
 #' @export
 predict_pcr <- function(.fit, .new_data, ...) {
   predicted_score <- predict_pca(.fit, .new_data)
-  res <- predict_linear_regression(.fit, predicted_score, everything(), ...)
+  res <- predict_linear_regression(.fit, predicted_score, tidyselect::everything(), ...)
 
   return(res)
 }

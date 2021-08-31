@@ -4,7 +4,13 @@
 \alias{fit_pca}
 \title{주성분 분해}
 \usage{
-fit_pca(.data, .xvar = everything(), .pc = NULL, .center = TRUE, .scale = TRUE)
+fit_pca(
+  .data,
+  .xvar = tidyselect::everything(),
+  .pc = NULL,
+  .center = TRUE,
+  .scale = TRUE
+)
 }
 \arguments{
 \item{.data}{관측 데이터 프레임.}
