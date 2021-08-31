@@ -139,7 +139,13 @@
     <p>주어진 데이터에 대하여 주성분을 분해한다.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fit_pca</span><span class='op'>(</span><span class='va'>.data</span>, .xvar <span class='op'>=</span> <span class='fu'>everything</span><span class='op'>(</span><span class='op'>)</span>, .pc <span class='op'>=</span> <span class='cn'>NULL</span>, .center <span class='op'>=</span> <span class='cn'>TRUE</span>, .scale <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>fit_pca</span><span class='op'>(</span>
+  <span class='va'>.data</span>,
+  .xvar <span class='op'>=</span> <span class='fu'>tidyselect</span><span class='fu'>::</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/everything.html'>everything</a></span><span class='op'>(</span><span class='op'>)</span>,
+  .pc <span class='op'>=</span> <span class='cn'>NULL</span>,
+  .center <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  .scale <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
