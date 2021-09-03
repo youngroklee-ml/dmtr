@@ -84,7 +84,7 @@
 
       
 
-      </header><script src="pca_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="pca_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>주성분분석</h1>
@@ -261,7 +261,7 @@ SS(\mathbf{x}_j) = \mathbf{x}_j^\top \mathbf{x}_j = \sum_{i = 1}^{n} x_{ij}^2
     }
     return(list(T = Th, V = Vh))
 }
-&lt;bytecode: 0x7feaa1444eb8&gt;
+&lt;bytecode: 0x7f8dff8238c8&gt;
 &lt;environment: namespace:dmtr&gt;</code></pre>
 <p>위 함수를 이용하여 주성분 분해를 수행하는 함수 <code><a href="../reference/fit_pca.html">fit_pca()</a></code>를 실행해보자.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -271,22 +271,22 @@ SS(\mathbf{x}_j) = \mathbf{x}_j^\top \mathbf{x}_j = \sum_{i = 1}^{n} x_{ij}^2
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $score</span>
 <span class="co">#&gt;              PC1        PC2</span>
-<span class="co">#&gt;  [1,] -1.2672472 -0.2796131</span>
-<span class="co">#&gt;  [2,]  0.2485837  1.4996459</span>
-<span class="co">#&gt;  [3,]  0.6166785 -0.3344830</span>
-<span class="co">#&gt;  [4,] -2.8174942  0.6097016</span>
-<span class="co">#&gt;  [5,]  1.7218380  1.5057495</span>
-<span class="co">#&gt;  [6,]  1.0580977 -1.7554053</span>
-<span class="co">#&gt;  [7,]  0.1870461  0.3451973</span>
-<span class="co">#&gt;  [8,] -0.9370744 -0.8763285</span>
-<span class="co">#&gt;  [9,]  0.5953602  0.4324721</span>
-<span class="co">#&gt; [10,]  0.5942116 -1.1469365</span>
+<span class="co">#&gt;  [1,] -1.2672472  0.2796131</span>
+<span class="co">#&gt;  [2,]  0.2485837 -1.4996459</span>
+<span class="co">#&gt;  [3,]  0.6166785  0.3344830</span>
+<span class="co">#&gt;  [4,] -2.8174942 -0.6097016</span>
+<span class="co">#&gt;  [5,]  1.7218380 -1.5057495</span>
+<span class="co">#&gt;  [6,]  1.0580977  1.7554053</span>
+<span class="co">#&gt;  [7,]  0.1870461 -0.3451973</span>
+<span class="co">#&gt;  [8,] -0.9370744  0.8763285</span>
+<span class="co">#&gt;  [9,]  0.5953602 -0.4324721</span>
+<span class="co">#&gt; [10,]  0.5942116  1.1469365</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $loadings</span>
 <span class="co">#&gt;              PC1         PC2</span>
-<span class="co">#&gt; age    0.5684412  0.59068028</span>
-<span class="co">#&gt; height 0.3574679 -0.80427250</span>
-<span class="co">#&gt; weight 0.7410069 -0.06513488</span>
+<span class="co">#&gt; age    0.5684412 -0.59068027</span>
+<span class="co">#&gt; height 0.3574679  0.80427250</span>
+<span class="co">#&gt; weight 0.7410069  0.06513489</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $ncomp</span>
 <span class="co">#&gt; [1] 2</span>
@@ -328,10 +328,10 @@ SS(\mathbf{x}_j) = \mathbf{x}_j^\top \mathbf{x}_j = \sum_{i = 1}^{n} x_{ij}^2
 <span class="co">#&gt;  65.3999999   0.5332899   5.5093679 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $hessian</span>
-<span class="co">#&gt;              (Intercept)          PC1          PC2</span>
-<span class="co">#&gt; (Intercept) 2.000000e+01 6.480927e-12 3.302913e-12</span>
-<span class="co">#&gt; PC1         6.480927e-12 2.123307e+01 1.569578e-11</span>
-<span class="co">#&gt; PC2         3.302913e-12 1.569578e-11 1.476693e+01</span>
+<span class="co">#&gt;               (Intercept)           PC1          PC2</span>
+<span class="co">#&gt; (Intercept)  2.000000e+01 -6.245005e-13 3.747003e-12</span>
+<span class="co">#&gt; PC1         -6.245005e-13  2.123307e+01 1.502964e-11</span>
+<span class="co">#&gt; PC2          3.747003e-12  1.502964e-11 1.476693e+01</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $mse</span>
 <span class="co">#&gt; [1] 7.038464</span>
@@ -359,7 +359,7 @@ SS(\mathbf{x}_j) = \mathbf{x}_j^\top \mathbf{x}_j = \sum_{i = 1}^{n} x_{ij}^2
 <code class="sourceCode R"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_pcr.html">fit_pcr</a></span><span class="op">(</span><span class="va">biometric</span>, <span class="va">weight</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">age</span>, <span class="va">height</span><span class="op">)</span>, .pc <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ttest_linear_regression.html">ttest_linear_regression</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 3 x 5</span>
+<span class="co">#&gt; # A tibble: 3 × 5</span>
 <span class="co">#&gt;   term        estimate std_error t_statistic  p_value</span>
 <span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 (Intercept)   65.4       0.839      78.0   1.50e-11</span>
@@ -369,9 +369,9 @@ SS(\mathbf{x}_j) = \mathbf{x}_j^\top \mathbf{x}_j = \sum_{i = 1}^{n} x_{ij}^2
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit</span><span class="op">$</span><span class="va">mse</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">hessian</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>
 <span class="co">#&gt;               (Intercept)           PC1           PC2</span>
-<span class="co">#&gt; (Intercept)  7.038464e-01  2.070131e-14 -1.785960e-13</span>
-<span class="co">#&gt; PC1          2.070131e-14  6.629718e-01 -6.747667e-13</span>
-<span class="co">#&gt; PC2         -1.785960e-13 -6.747667e-13  9.532742e-01</span></code></pre></div>
+<span class="co">#&gt; (Intercept)  7.038464e-01 -2.148336e-13 -1.574291e-13</span>
+<span class="co">#&gt; PC1         -2.148336e-13  6.629718e-01 -7.046733e-13</span>
+<span class="co">#&gt; PC2         -1.574291e-13 -7.046733e-13  9.532742e-01</span></code></pre></div>
 <p>위 주성분 회귀분석에 단계별 선택방법을 적용할 경우, 두 번째 주성분 스코어만을 독립변수로 사용한 회귀모형이 최종적으로 선택되며, 이 때의 수정결정계수가 두 개의 주성분을 모두 이용한 모형보다 높음을 확인할 수 있다.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">selected_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_variables_stepwise.html">select_variables_stepwise</a></span><span class="op">(</span><span class="va">reg_data</span>, <span class="va">weight</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">T_A</span><span class="op">)</span><span class="op">)</span>
@@ -384,8 +384,8 @@ SS(\mathbf{x}_j) = \mathbf{x}_j^\top \mathbf{x}_j = \sum_{i = 1}^{n} x_{ij}^2
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $hessian</span>
 <span class="co">#&gt;               (Intercept)           PC2</span>
-<span class="co">#&gt; (Intercept)  2.000000e+01 -7.133183e-12</span>
-<span class="co">#&gt; PC2         -7.133183e-12  1.476693e+01</span>
+<span class="co">#&gt; (Intercept)  2.000000e+01 -1.065814e-11</span>
+<span class="co">#&gt; PC2         -1.065814e-11  1.476693e+01</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $mse</span>
 <span class="co">#&gt; [1] 6.536071</span>
@@ -512,14 +512,14 @@ SS(\mathbf{x}_j) = \mathbf{x}_j^\top \mathbf{x}_j = \sum_{i = 1}^{n} x_{ij}^2
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">new_score</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_pca.html">predict_pca</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">new_obs</span><span class="op">)</span>
 <span class="va">new_score</span>
-<span class="co">#&gt; # A tibble: 1 x 2</span>
+<span class="co">#&gt; # A tibble: 1 × 2</span>
 <span class="co">#&gt;     PC1   PC2</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 0.576 0.307</span></code></pre></div>
 <p>이 주성분 스코어를 함수 <code><a href="../reference/predict_linear_regression.html">predict_linear_regression()</a></code>의 입력 데이터로 사용할 때, 새 관측치에 대한 종속변수의 예측값을 얻을 수 있다.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/predict_linear_regression.html">predict_linear_regression</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">new_score</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"PC"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 1</span>
+<span class="co">#&gt; # A tibble: 1 × 1</span>
 <span class="co">#&gt;   .pred</span>
 <span class="co">#&gt;   &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  67.4</span></code></pre></div>
@@ -531,7 +531,7 @@ SS(\mathbf{x}_j) = \mathbf{x}_j^\top \mathbf{x}_j = \sum_{i = 1}^{n} x_{ij}^2
   .ci_interval <span class="op">=</span> <span class="fl">0.95</span>,
   .pi_interval <span class="op">=</span> <span class="fl">0.95</span>
 <span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 6</span>
+<span class="co">#&gt; # A tibble: 1 × 6</span>
 <span class="co">#&gt;   .pred   .se .ci_lower .ci_upper .pi_lower .pi_upper</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  67.4  1.01      65.0      69.8      60.7      74.1</span></code></pre></div>

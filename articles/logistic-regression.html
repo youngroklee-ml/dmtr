@@ -84,7 +84,7 @@
 
       
 
-      </header><script src="logistic-regression_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="logistic-regression_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>로지스틱 회귀분석</h1>
@@ -281,14 +281,14 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; $betas</span>
 <span class="co">#&gt; (Intercept)          x1          x2          x3 </span>
-<span class="co">#&gt;  -30.514948    2.031393    3.471005    2.414953 </span>
+<span class="co">#&gt;  -30.517066    2.032472    3.471400    2.415009 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $hessian</span>
 <span class="co">#&gt;             (Intercept)         x1         x2         x3</span>
-<span class="co">#&gt; (Intercept)  -1.6884644 -0.6964397 -12.652412  -2.595960</span>
-<span class="co">#&gt; x1           -0.6964397 -0.6964397  -5.001395  -1.031955</span>
-<span class="co">#&gt; x2          -12.6524118 -5.0013949 -96.041841 -17.996954</span>
-<span class="co">#&gt; x3           -2.5959595 -1.0319549 -17.996954  -6.459962</span></code></pre></div>
+<span class="co">#&gt; (Intercept)  -1.6883726 -0.6964768 -12.651721  -2.595166</span>
+<span class="co">#&gt; x1           -0.6964768 -0.6964768  -5.001898  -1.031295</span>
+<span class="co">#&gt; x2          -12.6517215 -5.0018977 -96.036230 -17.991607</span>
+<span class="co">#&gt; x3           -2.5951656 -1.0312948 -17.991607  -6.457024</span></code></pre></div>
 <p>위 추정계수와 헤시안 행렬(Hessian matrix)를 이용하여 아래와 같이 결과를 요약할 수 있다.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_summary_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
@@ -313,7 +313,7 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">-30.51</td>
+<td align="right">-30.52</td>
 <td align="right">18.02</td>
 <td align="right">-1.69</td>
 <td align="right">0.09</td>
@@ -325,7 +325,7 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">1.98</td>
 <td align="right">1.02</td>
 <td align="right">0.31</td>
-<td align="right">7.62</td>
+<td align="right">7.63</td>
 </tr>
 <tr class="odd">
 <td align="left">x2</td>
@@ -333,11 +333,11 @@ L = \prod_{i = 1}^{N} P_i^{y_i} (1 - P_i)^{1 - y_i}
 <td align="right">2.08</td>
 <td align="right">1.67</td>
 <td align="right">0.09</td>
-<td align="right">32.17</td>
+<td align="right">32.18</td>
 </tr>
 <tr class="even">
 <td align="left">x3</td>
-<td align="right">2.41</td>
+<td align="right">2.42</td>
 <td align="right">1.40</td>
 <td align="right">1.73</td>
 <td align="right">0.08</td>
@@ -710,26 +710,26 @@ L &amp;=&amp; \prod_{i = 1}^{n} \frac{1}{1 + \sum_{j = 2}^{J} \exp \left( \beta_
   .control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, reltol <span class="op">=</span> <span class="fl">1e-10</span>, maxit <span class="op">=</span> <span class="fl">100000</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; $betas</span>
-<span class="co">#&gt;                     1          2</span>
-<span class="co">#&gt; (Intercept) -63.92195 -117.31218</span>
-<span class="co">#&gt; x1          101.89018  132.31671</span>
-<span class="co">#&gt; x2           10.75492   20.66495</span>
+<span class="co">#&gt;                     1         2</span>
+<span class="co">#&gt; (Intercept) -63.85834 -117.2507</span>
+<span class="co">#&gt; x1          101.71994  132.1511</span>
+<span class="co">#&gt; x2           10.74561   20.6560</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $hessian</span>
 <span class="co">#&gt;               (Intercept):1        x1:1       x2:1 (Intercept):2        x1:2</span>
-<span class="co">#&gt; (Intercept):1    -3.9792296 -0.41893460 -19.921531     1.9942294  0.21778801</span>
-<span class="co">#&gt; x1:1             -0.4189346 -0.04458527  -2.096566     0.2177880  0.02399536</span>
-<span class="co">#&gt; x2:1            -19.9215315 -2.09656629 -99.757082    10.0391603  1.09564026</span>
-<span class="co">#&gt; (Intercept):2     1.9942294  0.21778801  10.039160    -2.8633894 -0.30640390</span>
-<span class="co">#&gt; x1:2              0.2177880  0.02399536   1.095640    -0.3064039 -0.03311714</span>
-<span class="co">#&gt; x2:2             10.0391673  1.09564105  50.551091   -14.3914271 -1.53915869</span>
+<span class="co">#&gt; (Intercept):1    -3.9799586 -0.41900400 -19.925135     1.9937823  0.21773144</span>
+<span class="co">#&gt; x1:1             -0.4190040 -0.04459196  -2.096909     0.2177314  0.02398835</span>
+<span class="co">#&gt; x2:1            -19.9251355 -2.09690897 -99.774898    10.0369307  1.09535838</span>
+<span class="co">#&gt; (Intercept):2     1.9937823  0.21773144  10.036931    -2.8635975 -0.30641877</span>
+<span class="co">#&gt; x1:2              0.2177314  0.02398835   1.095358    -0.3064188 -0.03311801</span>
+<span class="co">#&gt; x2:2             10.0369376  1.09535916  50.539970   -14.3924764 -1.53923402</span>
 <span class="co">#&gt;                     x2:2</span>
-<span class="co">#&gt; (Intercept):1  10.039167</span>
-<span class="co">#&gt; x1:1            1.095641</span>
-<span class="co">#&gt; x2:1           50.551091</span>
-<span class="co">#&gt; (Intercept):2 -14.391427</span>
-<span class="co">#&gt; x1:2           -1.539159</span>
-<span class="co">#&gt; x2:2          -72.348591</span></code></pre></div>
+<span class="co">#&gt; (Intercept):1  10.036938</span>
+<span class="co">#&gt; x1:1            1.095359</span>
+<span class="co">#&gt; x2:1           50.539970</span>
+<span class="co">#&gt; (Intercept):2 -14.392476</span>
+<span class="co">#&gt; x1:2           -1.539234</span>
+<span class="co">#&gt; x2:2          -72.353879</span></code></pre></div>
 </div>
 </div>
 <div id="ordinal-logistic-regression" class="section level1" number="3">
@@ -851,14 +851,14 @@ L &amp;=&amp; \prod_{i = 1}^{n} \frac{1}{1 + \sum_{j = 2}^{J} \exp \left( \beta_
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; $par</span>
-<span class="co">#&gt; [1] -13.027778 -11.391749   0.223394   0.299855</span>
+<span class="co">#&gt; [1] -13.0406925 -11.4033173   0.2237119   0.3000064</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $value</span>
-<span class="co">#&gt; [1] -6.441254</span>
+<span class="co">#&gt; [1] -6.441253</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $counts</span>
 <span class="co">#&gt; function gradient </span>
-<span class="co">#&gt;      491       NA </span>
+<span class="co">#&gt;      517       NA </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $convergence</span>
 <span class="co">#&gt; [1] 0</span>
@@ -868,10 +868,10 @@ L &amp;=&amp; \prod_{i = 1}^{n} \frac{1}{1 + \sum_{j = 2}^{J} \exp \left( \beta_
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $hessian</span>
 <span class="co">#&gt;             [,1]        [,2]        [,3]       [,4]</span>
-<span class="co">#&gt; [1,]  -1.3667424   0.6006933   -24.20300  -15.81004</span>
-<span class="co">#&gt; [2,]   0.6006933  -1.4689570   -27.55839  -12.06836</span>
-<span class="co">#&gt; [3,] -24.2029966 -27.5583895 -1706.78085 -843.06262</span>
-<span class="co">#&gt; [4,] -15.8100408 -12.0683618  -843.06262 -559.66934</span></code></pre></div>
+<span class="co">#&gt; [1,]  -1.3651661   0.5994946   -24.19031  -15.80066</span>
+<span class="co">#&gt; [2,]   0.5994946  -1.4671720   -27.53751  -12.06153</span>
+<span class="co">#&gt; [3,] -24.1903111 -27.5375073 -1705.56063 -842.49020</span>
+<span class="co">#&gt; [4,] -15.8006617 -12.0615345  -842.49020 -559.36746</span></code></pre></div>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-czepiel2002maximum" class="csl-entry">
 Czepiel, Scott A. 2002. <span>“Maximum Likelihood Estimation of Logistic Regression Models: Theory and Implementation.”</span> <em>Available at Czep. Net/Stat/Mlelr. Pdf</em>.

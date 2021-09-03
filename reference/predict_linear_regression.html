@@ -180,7 +180,7 @@
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>biometric</span>, package <span class='op'>=</span> <span class='st'>"dmtr"</span><span class='op'>)</span>
 <span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fit_linear_regression.html'>fit_linear_regression</a></span><span class='op'>(</span><span class='va'>biometric</span>, <span class='va'>weight</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>age</span>, <span class='va'>height</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>predict_linear_regression</span><span class='op'>(</span><span class='va'>fit</span>, <span class='va'>biometric</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>age</span>, <span class='va'>height</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 10 x 1</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 10 × 1</span>
 #&gt;    .pred
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'> 1</span>  61.1
@@ -194,12 +194,12 @@
 #&gt; <span style='color: #BCBCBC;'> 9</span>  69.3
 #&gt; <span style='color: #BCBCBC;'>10</span>  68.2</div><div class='input'><span class='fu'>predict_linear_regression</span><span class='op'>(</span><span class='va'>fit</span>, <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>age <span class='op'>=</span> <span class='fl'>40</span>, height <span class='op'>=</span> <span class='fl'>170</span><span class='op'>)</span>,
   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>age</span>, <span class='va'>height</span><span class='op'>)</span>, .ci_interval <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 4</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 × 4</span>
 #&gt;   .pred   .se .ci_lower .ci_upper
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>1</span>  67.4  1.01      65.0      69.8</div><div class='input'><span class='fu'>predict_linear_regression</span><span class='op'>(</span><span class='va'>fit</span>, <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>age <span class='op'>=</span> <span class='fl'>40</span>, height <span class='op'>=</span> <span class='fl'>170</span><span class='op'>)</span>,
   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>age</span>, <span class='va'>height</span><span class='op'>)</span>, .pi_interval <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 4</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 × 4</span>
 #&gt;   .pred   .se .pi_lower .pi_upper
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>1</span>  67.4  1.01      60.7      74.1</div><div class='input'>
