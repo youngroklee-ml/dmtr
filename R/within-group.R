@@ -148,8 +148,9 @@ group_summary <- function(.data, .group_var, .xvar) {
 #'
 #' @param .data 관측 데이터 프레임. A raw data frame.
 #' @param .group_var 범주변수. A variable to group by.
-#' @param .xvar 분산-공분산 행렬에 포함될 변수. One or more variables separated by commas within \code{c()}. Each
-#'   variable needs to be a numeric column of \code{.data}.
+#' @param .xvar 분산-공분산 행렬에 포함될 변수. One or more variables separated by commas
+#'   within \code{c()}. Each variable needs to be a numeric column of
+#'   \code{.data}.
 #' @return 하나의 분산-공분산 행렬. A covariance matrix.
 #'
 #' @examples

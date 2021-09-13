@@ -11,8 +11,9 @@ pooled_variance(.data, .group_var, .xvar)
 
 \item{.group_var}{범주변수. A variable to group by.}
 
-\item{.xvar}{분산-공분산 행렬에 포함될 변수. One or more variables separated by commas within \code{c()}. Each
-variable needs to be a numeric column of \code{.data}.}
+\item{.xvar}{분산-공분산 행렬에 포함될 변수. One or more variables separated by commas
+within \code{c()}. Each variable needs to be a numeric column of
+\code{.data}.}
 }
 \value{
 하나의 분산-공분산 행렬. A covariance matrix.

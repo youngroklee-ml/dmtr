@@ -25,11 +25,8 @@ fisher_ld <- function(.data, .group_var, .xvar) {
 
   sigma_hat <- pooled_variance(.data, !!.group_var, !!.xvar)
 
-  res <- solve(sigma_hat) %*%
-    as.matrix(mu_hat[[1]] - mu_hat[[2]], ncol = 1L) %>%
-    as.vector()
+  res <- solve(sigma_hat) %*% purrr::reduce(mu_hat, `-`) %>% drop()
 
-  names(res) <- names(mu_hat[[1]])
   attr(res, "group") <- attr(mu_hat, "group")
 
   return(res)
