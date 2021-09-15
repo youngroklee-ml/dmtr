@@ -1,13 +1,9 @@
 test_that("Fisher discriminant function matches", {
-  expect(
-    all(
-      dplyr::near(
-        fisher_ld(binaryclass2, class, c(x1, x2)),
-        c(x1 = -1.5080, x2 = 1.5418),
-        tol = 0.0001
-      )
-    ),
-    failure_message = "Estimated discriminant function does not match to book example"
+  expect_equal(
+    fisher_ld(binaryclass2, class, c(x1, x2)),
+    c(x1 = -1.5080, x2 = 1.5418),
+    tolerance = 1e-3,
+    ignore_attr = TRUE
   )
 })
 
