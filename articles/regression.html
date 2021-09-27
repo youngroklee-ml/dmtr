@@ -84,7 +84,7 @@
 
       
 
-      </header><script src="regression_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><script src="regression_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>회귀분석</h1>
@@ -564,7 +564,6 @@ E\left[C_p \, | \, bias = 0\right] &amp;\approx&amp; \frac{E\left[SSE_p \, | \, 
 <span class="co">#&gt; ℹ Use `all_of(.x)` instead of `.x` to silence this message.</span>
 <span class="co">#&gt; ℹ See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</span>
 <span class="co">#&gt; This message is displayed once per session.</span>
-
 <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dfr</a></span><span class="op">(</span>
   <span class="va">fit_reduced</span>,
   <span class="op">~</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
@@ -637,7 +636,6 @@ E\left[C_p \, | \, bias = 0\right] &amp;\approx&amp; \frac{E\left[SSE_p \, | \, 
 <span class="co">#&gt; ℹ Use `all_of(variables_in_model)` instead of `variables_in_model` to silence this message.</span>
 <span class="co">#&gt; ℹ See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</span>
 <span class="co">#&gt; This message is displayed once per session.</span>
-
 <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">new_variable_in</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0L</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"변수 선택 종료"</span><span class="op">)</span>
 <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
@@ -663,7 +661,6 @@ E\left[C_p \, | \, bias = 0\right] &amp;\approx&amp; \frac{E\left[SSE_p \, | \, 
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"변수 선택 종료"</span><span class="op">)</span>
 <span class="op">}</span>
 <span class="co">#&gt; [1] "변수 선택 종료"</span>
-
 <span class="va">variables_in_model</span>
 <span class="co">#&gt; [1] "age"    "height"</span></code></pre></div>
 <p>위 단계적 변수 선택 방법을 함수 <code><a href="../reference/select_variables_stepwise.html">select_variables_stepwise()</a></code>로 수행할 수 있다.</p>
