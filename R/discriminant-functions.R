@@ -268,8 +268,8 @@ qd_fun <- function(.data, .group_var, .xvar, .prior = NULL) {
     sigma_hat <- .x[["sigma"]]
     sigma_hat_inv <- solve(sigma_hat)
 
-    res <- - 1 / 2 * t(mu_hat - x) %*% sigma_hat_inv %*% (mu_hat - x) -
-      1 /2 * log(det(sigma_hat)) + log(.y)
+    res <- -1 / 2 * t(mu_hat - x) %*% sigma_hat_inv %*% (mu_hat - x) -
+      1 / 2 * log(det(sigma_hat)) + log(.y)
 
     drop(res)
   })
