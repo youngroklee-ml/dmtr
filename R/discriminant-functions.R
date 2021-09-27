@@ -168,8 +168,9 @@ score_da <- function(.f, .new_data, .xvar) {
       uvar <- rlang::sym(stringr::str_c("u", class))
 
       data %>%
-        dplyr::select(!!xvar) %>%
-        dplyr::transmute(!!uvar := apply(., 1, f))
+        dplyr::rowwise() %>%
+        dplyr::transmute(!!uvar := .env$f(dplyr::c_across(!!xvar))) %>%
+        dplyr::ungroup()
     },
     xvar = !!.xvar,
     data = .new_data
@@ -215,7 +216,11 @@ predict_da <- function(.f, .new_data, .xvar,
 
   p_df <- u_df %>%
     dplyr::mutate(dplyr::across(tidyselect::everything(), exp)) %>%
-    dplyr::mutate(dplyr::across(tidyselect::everything(), function(x) x / rowSums(.)))
+    dplyr::rowwise() %>%
+    dplyr::mutate(dplyr::across(tidyselect::everything(),
+                                function(x, denom) x / denom,
+                                denom = sum(dplyr::c_across()))) %>%
+    dplyr::ungroup()
 
   names(p_df) <- stringr::str_c(".pred", attr(.f, "group"), sep = "_")
 
