@@ -11,7 +11,7 @@ Description: "데이터마이닝 기법과 응용" (전치혁 지음, 한나래 
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.0
 Imports: 
     magrittr,
     dplyr (>= 1.0.0),
